@@ -1,98 +1,103 @@
-# ui-date directive [![Build Status](https://travis-ci.org/angular-ui/ui-codemirror.png)](https://travis-ci.org/angular-ui/ui-codemirror)
+# ui-codemirror directive [![Build Status](https://travis-ci.org/angular-ui/ui-codemirror.png)](https://travis-ci.org/angular-ui/ui-codemirror)
 
-This directive allows you to add a date-picker to your form elements.
+This directive allows you to add codemirror to your textarea elements.
 
 # Requirements
 
 - AngularJS
-- JQuery
-- JQueryUI
-- [Date.toISOString()](https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Date/toISOString) (requires [polyfill](https://github.com/kriskowal/es5-shim/) for &le;IE8)
+- [CodeMirror 3.x](https://github.com/marijnh/CodeMirror)
 
 # Testing
 
-We use testacular and jshint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
+We use karma (the new testacular) and jshint to ensure the quality of the code.  The easiest way to run these checks is to use grunt:
 
   npm install -g grunt-cli
   npm install
   bower install
   grunt
 
-The testacular task will try to open Chrome as a browser in which to run the tests.  Make sure this is available or change the configuration in `test\test.config.js` 
+The karma task will try to open Firefox as a browser in which to run the tests.  Make sure this is available or change the configuration in `test\karma.conf.js`
 
 # Usage
 
 We use [bower](http://twitter.github.com/bower/) for dependency management.  Add
 
     dependencies: {
-        "angular-ui-date": "latest"
+        "angular-ui-codemirror": "latest"
     }
 
 To your `components.json` file. Then run
 
     bower install
 
-This will copy the ui-date files into your `components` folder, along with its dependencies. Load the script files in your application:
+This will copy the ui-codemirror files into your `components` folder, along with its dependencies. Load the script files in your application:
 
-    <script type="text/javascript" src="components/jquery/jquery.js"></script>
-    <script type="text/javascript" src="components/jquery-ui\ui\jquery-ui.custom.js"></script>
-    <script type="text/javascript" src="components/angular/angular.js"></script>
-    <script type="text/javascript" src="components/angular-ui-date/date.js"></script>
+  <script type="text/javascript" src="components/codemirror/lib/codemirror.js"></script>
+  <script type="text/javascript" src="components/angular/angular.js"></script>
+  <script type="text/javascript" src="components/angular-ui-codemirror/codemirror.js"></script>
 
-Add the date module as a dependency to your application module:
+Add the CodeMirror module as a dependency to your application module:
 
-    var myAppModule = angular.module('MyApp', ['ui.date'])
+    var myAppModule = angular.module('MyApp', ['ui.codemirror'])
 
 Apply the directive to your form elements:
 
-    <input ui-date>
+    <textarea ui-codemirror ng-model="x"></textarea>
 
 ## Options
 
-All the jQueryUI DatePicker options can be passed through the directive.
+All the [Codemirror configuration options](http://codemirror.net/doc/manual.html#config) can be passed through the directive.
 
-	myAppModule.controller('MyController', function($scope) {
-		$scope.dateOptions = {
-			changeYear: true,
-			changeMonth: true,
-			yearRange: '1900:-0'
+	myAppModule.controller('MyController', [ '$scope', function($scope) {
+		$scope.editorOptions = {
+			lineWrapping : true,
+			lineNumbers: true,
+			readOnly: 'nocursor',
+			mode: 'xml',
 		};
-	});
+	}]);
 
-    <input ui-date="dateOptions" name="DateOfBirth">
-
-## Static Inline Picker
-
-If you want a static picker then simply apply the directive to a div rather than an input element.
-
-    <div ui-date="dateOptions" name="DateOfBirth"></div>
+    <textarea ui-codemirror="editorOptions" ng-model="x"></textarea>
 
 ## Working with ng-model
 
-The ui-date directive plays nicely with ng-model and validation directives such as ng-required.
+The ui-codemirror directive plays nicely with ng-model.
 
-If you add the ng-model directive to same the element as ui-date then the picked date is automatically synchronized with the model value.
+The ng-model will be watched for to set the CodeMirror document value (by [setValue](http://codemirror.net/doc/manual.html#setValue)).
 
-_The ui-date directive stores and expects the model value to be a standard javascript Date object._
+_The ui-codemirror directive stores and expects the model value to be a standard javascript String._
 
-## ui-date-format directive
-The ui-date directive only works with Date objects.
-If you want to pass date strings to and from the date directive via ng-model then you must use the ui-date-format directive.
-This directive specifies the format of the date string that will be expected in the ng-model.
-The format string syntax is that defined by the JQueryUI Date picker. For example
+## ui-codemirror events
+The [CodeMirror events](http://codemirror.net/doc/manual.html#events) are supported has configuration options.
+They keep the same name but are prefixed by _on_..
+_This directive expects the events to be javascript Functions._
+For example to handle changes of in the editor, we use _onChange_
 
-    <input ui-date ui-date-format="DD, d MM, yy" ng-model="myDate">
+    <textarea ui-codemirror="{
+                    lineWrapping : true,
+                    lineNumbers: true,
+                    mode: 'javascript',
+                    onChange: reParseInput
+                }" ng-model="x"></textarea>
 
-Now you can set myDate in the controller.
+Now you can set the _reParseInput_ function in the controller.
 
-    $scope.myDate = "Thursday, 11 October, 2012";
+    $scope.reParseInput = function(){
+      $scope.errorMsg = "";
+      $timeout.cancel(pending);
+      pending = $timeout($scope.workHere, 500);
+    };
 
-## ng-required directive
+## ui-refresh directive
 
-If you apply the required directive to element then the form element is invalid until a date is picked.
+If you apply the refresh directive to element then any change to do this scope value will result to a [refresh of the CodeMirror instance](http://codemirror.net/doc/manual.html#refresh).
 
-Note: Remember that the ng-required directive must be explictly set, i.e. to "true".  This is especially true on divs:
+_The ui-refresh directive expects a scope variable that can be any thing...._
 
-    <div ui-date="dateOptions" name="DateOfBirth" ng-required="true"></div>
+    <textarea ui-codemirror ng-model="x" ui-refresh='isSomething'></textarea>
 
+Now you can set the _isSomething_ in the controller scope.
 
+    $scope.isSomething = true;
+
+Note: the comparison operator between the old and the new value is "!=="
