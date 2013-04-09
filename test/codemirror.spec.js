@@ -8,12 +8,14 @@ describe('uiCodemirror', function () {
 	'use strict';
 
 	// declare these up here to be global to all tests
-	var scope, $compile, $timeout, uiConfig = angular.module('ui.config');
+	var scope, $compile, $timeout, uiConfig;
 
-	beforeEach(module('ui.directives'));
-	beforeEach(function () {
-		uiConfig.value('ui.config', {codemirror: {bar: 'baz'}});
-	});
+	beforeEach(module('ui.codemirror'));
+	beforeEach(inject(function (uiCodemirrorConfig) {
+    uiConfig = uiCodemirrorConfig;
+    uiConfig.codemirror = {bar: 'baz'};
+
+	}));
 
 	// inject in angular constructs. Injector knows about leading/trailing underscores and does the right thing
 	// otherwise, you would need to inject these into each test
@@ -24,7 +26,7 @@ describe('uiCodemirror', function () {
 	}));
 
 	afterEach(function () {
-		uiConfig.value('ui.config', {}); // cleanup
+		uiConfig = {};
 	});
 
 	describe('compiling this directive', function () {
@@ -54,11 +56,11 @@ describe('uiCodemirror', function () {
 
 		it('should watch the uiCodemirror attribute', function () {
 			spyOn(scope, '$watch');
-			$compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
+      // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+			$compile('<div><textarea ui-codemirror ng-model="foo" uiRefresh="sdf"></textarea></div>')(scope);
 			$timeout.flush();
 			expect(scope.$watch).toHaveBeenCalled();
 		});
-
 	});
 
 	describe('while spying on the CodeMirror instance', function () {
@@ -75,13 +77,15 @@ describe('uiCodemirror', function () {
 
 		describe('verify the directive options', function () {
 			it('should include the passed options', function () {
-				$compile('<textarea ui-codemirror="{oof: \'baar\'}" ng-model="foo"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				$compile('<div><textarea ui-codemirror="{oof: \'baar\'}" ng-model="foo"></textarea></div>')(scope);
 				$timeout.flush();
 				expect(CodeMirror.fromTextArea.mostRecentCall.args[1].oof).toEqual("baar");
 			});
 
 			it('should include the default options', function () {
-				$compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				$compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
 				$timeout.flush();
 				expect(CodeMirror.fromTextArea.mostRecentCall.args[1].bar).toEqual('baz');
 			});
@@ -89,19 +93,23 @@ describe('uiCodemirror', function () {
 
 		describe('when uiRefresh is added', function () {
 			it('should trigger the CodeMirror.refresh() method', function () {
-				$compile('<textarea ui-codemirror ng-model="foo" ui-refresh="bar"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				$compile('<div><textarea ui-codemirror ng-model="foo" ui-refresh="bar"></textarea></div>')(scope);
 				$timeout.flush();
-				spyOn(codemirror, 'refresh');
+				var spy = spyOn(codemirror, 'refresh');
 				scope.$apply('bar = true');
 				$timeout.flush();
 				expect(codemirror.refresh).toHaveBeenCalled();
+        scope.$apply('bar = false');
+        $timeout.flush();
+        expect(spy.callCount).toEqual(2);
 			});
 		});
 
-
 		describe('when the IDE changes', function () {
 			it('should update the model', function () {
-				$compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				$compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
 				scope.$apply("foo = 'bar'");
 				$timeout.flush();
 				var value = 'baz';
@@ -112,7 +120,8 @@ describe('uiCodemirror', function () {
 
 		describe('when the model changes', function () {
 			it('should update the IDE', function () {
-				var element = $compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				var element = $compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
 				scope.foo = 'bar';
 				scope.$apply();
 				$timeout.flush();
@@ -122,7 +131,8 @@ describe('uiCodemirror', function () {
 
 		describe('when the model is undefined/null', function () {
 			it('should update the IDE with an empty string', function () {
-				var element = $compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
+        // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+				var element = $compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
 				scope.$apply();
 				$timeout.flush();
 				expect(scope.foo).toBe(undefined);
