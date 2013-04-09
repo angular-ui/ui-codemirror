@@ -16,7 +16,7 @@ module.exports = function (grunt) {
       }
     },
     jshint:{
-      all:['gruntfile.js','src/**/*.js', 'test/**/*.js', 'demo/**/*.js'],
+      all:['ui-codemirror.js', 'gruntFile.js','test/**/*.js'],
       options:{
         curly:true,
         eqeqeq:true,

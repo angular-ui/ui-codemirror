@@ -15,9 +15,13 @@
     "gruntFile.js",
     "package.json"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular-ui/ui-codemirror.git"
+  },
   "dependencies": {
-    "angular": "~1.x",
-    "codemirror": "latest"
+    "angular": "*",
+    "codemirror": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.x"

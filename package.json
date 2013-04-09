@@ -5,7 +5,7 @@
   "author": "https://github.com/angular-ui/ui-codemirror/contributors",
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
-  "main": "src/codemirror.js",
+  "main": "./ui-codemirror.js",
   "dependencies": {},
   "devDependencies": {
     "bower": "~0.8.x",

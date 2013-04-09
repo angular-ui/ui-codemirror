@@ -41,7 +41,7 @@ This will copy the ui-codemirror files into your `components` folder, along with
 ```html
 <script type="text/javascript" src="components/codemirror/lib/codemirror.js"></script>
 <script type="text/javascript" src="components/angular/angular.js"></script>
-<script type="text/javascript" src="components/angular-ui-codemirror/codemirror.js"></script>
+<script type="text/javascript" src="components/angular-ui-codemirror/ui-codemirror.js"></script>
 ```
 
 Add the CodeMirror module as a dependency to your application module:

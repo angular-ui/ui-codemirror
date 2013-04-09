@@ -13,7 +13,7 @@ files = [
   'components/angular/angular.js',
   'components/angular-mocks/angular-mocks.js',
   'components/codemirror/lib/codemirror.js',
-  'src/codemirror.js',
+  'ui-codemirror.js',
   'test/*.spec.js'
 ];
 
