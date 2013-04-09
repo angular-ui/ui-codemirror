@@ -1,4 +1,4 @@
-# ui-codemirror directive [![Build Status](https://travis-ci.org/angular-ui/ui-codemirror.png)](https://travis-ci.org/angular-ui/ui-codemirror)
+# ui-codemirror directive [![Build Status](https://travis-ci.org/douglasduteil/ui-codemirror.png)](https://travis-ci.org/douglasduteil/ui-codemirror)
 
 This directive allows you to add codemirror to your textarea elements.
 
