@@ -26,16 +26,7 @@ exclude = [
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
-reporters = ['progress'];
-
-
-// web server port
-port = 9876;
-
-
-// cli runner port
-runnerPort = 9100;
-
+reporters = ['dots'];
 
 // enable / disable colors in the output (reporters and logs)
 colors = true;
@@ -58,7 +49,7 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['PhantomJS'];
+browsers = ['Chrome', 'Firefox'];
 
 
 // If browser does not capture in given timeout [ms], kill it
