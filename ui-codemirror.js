@@ -26,7 +26,7 @@ angular.module('ui.codemirror', [])
             var newValue = instance.getValue();
             if (newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
-              if(!scope.$$phase) scope.$apply();
+              if(!scope.$$phase){ scope.$apply(); }
             }
             if (typeof aEvent === "function") {
               aEvent(instance, changeObj);
