@@ -1,20 +1,67 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>AngularUI - CodeMirror Demo</title>
-  <base href=".."></base>
-  <link rel="stylesheet" href="components/codemirror/lib/codemirror.css">
-  <script type="text/javascript" src="components/angular/angular.js"></script>
-  <script type="text/javascript" src="components/codemirror/lib/codemirror.js"></script>
-  <script type="text/javascript" src="ui-codemirror.js"></script>
-</head>
-<body ng-app="ui.codemirror">
-    <textarea ui-codemirror="{lineNumbers: true}" ng-model="foo"></textarea>
-</body>
 
-</html>
+<script>
+
+  $("#codemirror").hide();
+  requireCss("components/codemirror/lib/codemirror.css");
+  requireCss("components/codemirror/theme/rubyblue.css");
+  requirejs(
+      {
+        paths: {
+          'ui.codemirror': "build/ui-codemirror.min"
+        },
+        shim: {
+          'ui.codemirror': { deps: ['components/codemirror/lib/codemirror'] }
+        }
+      },
+      ['ui.codemirror'],
+      function () {
+
+        angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective' ])
+            .controller('CodemirrorCtrl', ['$scope', function ($scope) {
+              $scope.codeMirrorModel = "CodeMirror Hello World";
+            }])
+        ;
+        e$ = $("#codemirror");
+        e$.removeAttr("ng-non-bindable");
+
+        angular.bootstrap(e$[0], ['doc.ui-codeMirror']);
+        e$.show();
+        $("#codemirror-l").slideUp();
+
+
+      }
+  );
+</script>
+
+<!-- Le loading
+================================================== -->
+<div id="codemirror-l" class="loadingAnimation" >
+  <div class="bowl_ringG">
+    <div class="ball_holderG">
+      <div class="ballG">
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="codemirror" ng-non-bindable ng-controller="CodemirrorCtrl">
+  <div class="page-header">
+    <h1>CodeMirror</h1>
+  </div>
+  <h3>What?</h3>
+
+  <p>IDE? In <em>my</em> textareas? Surely you're joking.</p>
+
+  <p><textarea ui-codemirror="{
+                lineNumbers: true,
+                theme:'rubyblue'
+            }" ui-refresh="codeMirrorRefresh" ng-model="codeMirrorModel"></textarea></p>
+
+  <h3>How?</h3>
+    <pre class="prettyprint">
+    &lt;textarea ui-codemirror=&quot;{
+        lineNumbers: true,
+        theme:&#39;rubyblue&#39;
+        }&quot; ui-refresh=&quot;codeMirrorRefresh&quot; ng-model=&quot;codeMirrorModel&quot;&gt;&lt;/textarea&gt;
+    </pre>
+</section>
