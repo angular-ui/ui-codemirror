@@ -1,50 +1,5 @@
 
-<script>
-
-  $("#codemirror").hide();
-  requireCss("components/codemirror/lib/codemirror.css");
-  requireCss("components/codemirror/theme/rubyblue.css");
-  requirejs(
-      {
-        paths: {
-          'ui.codemirror': "build/ui-codemirror.min"
-        },
-        shim: {
-          'ui.codemirror': { deps: ['components/codemirror/lib/codemirror'] }
-        }
-      },
-      ['ui.codemirror'],
-      function () {
-
-        angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective' ])
-            .controller('CodemirrorCtrl', ['$scope', function ($scope) {
-              $scope.codeMirrorModel = "CodeMirror Hello World";
-            }])
-        ;
-        e$ = $("#codemirror");
-        e$.removeAttr("ng-non-bindable");
-
-        angular.bootstrap(e$[0], ['doc.ui-codeMirror']);
-        e$.show();
-        $("#codemirror-l").slideUp();
-
-
-      }
-  );
-</script>
-
-<!-- Le loading
-================================================== -->
-<div id="codemirror-l" class="loadingAnimation" >
-  <div class="bowl_ringG">
-    <div class="ball_holderG">
-      <div class="ballG">
-      </div>
-    </div>
-  </div>
-</div>
-
-<section id="codemirror" ng-non-bindable ng-controller="CodemirrorCtrl">
+<section id="codemirror" ng-app="doc.ui-codeMirror" ng-controller="CodemirrorCtrl">
   <div class="page-header">
     <h1>CodeMirror</h1>
   </div>
