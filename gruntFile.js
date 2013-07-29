@@ -18,7 +18,8 @@ module.exports = function (grunt) {
 
   // Project configuration.
   grunt.initConfig({
-    dist : 'components/angular-ui-docs',
+    bower: 'bower_components',
+    dist : '<%= bower %>/angular-ui-docs',
     pkg: grunt.file.readJSON('package.json'),
     meta: {
       banner: ['/**',
@@ -30,7 +31,17 @@ module.exports = function (grunt) {
         ''].join('\n'),
       view : {
         humaName : "UI CodeMirror",
-        repoName : "ui-codemirror"
+        repoName : "ui-codemirror",
+        demoHTML : grunt.file.read("demo/demo.html"),
+        demoJS : grunt.file.read("demo/demo.js"),
+        css : [
+          '<%= bower %>/codemirror/lib/codemirror.css',
+          '<%= bower %>/codemirror/theme/rubyblue.css'
+        ],
+        js : [
+          '<%= bower %>/codemirror/lib/codemirror.js',
+          'build/ui-codemirror.min.js'
+        ]
       }
     },
     karma: {
@@ -63,10 +74,9 @@ module.exports = function (grunt) {
       main: {
         files: [
           {src: ['<%= meta.view.repoName %>.js'], dest: '<%= dist %>/build/<%= meta.view.repoName %>.js', filter: 'isFile'},
-          {src: ['demo/demo.html'], dest: '<%= dist %>/demos.html', filter: 'isFile'},
-          {src: ['components/codemirror/lib/codemirror.js'], dest: '<%= dist %>/components/codemirror/lib/codemirror.js', filter: 'isFile'},
-          {src: ['components/codemirror/lib/codemirror.css'], dest: '<%= dist %>/components/codemirror/lib/codemirror.css', filter: 'isFile'},
-          {src: ['components/codemirror/theme/rubyblue.css'], dest: '<%= dist %>/components/codemirror/theme/rubyblue.css', filter: 'isFile'}
+          {src: ['<%= bower %>/codemirror/lib/codemirror.js'], dest: '<%= dist %>/<%= bower %>/codemirror/lib/codemirror.js', filter: 'isFile'},
+          {src: ['<%= bower %>/codemirror/lib/codemirror.css'], dest: '<%= dist %>/<%= bower %>/codemirror/lib/codemirror.css', filter: 'isFile'},
+          {src: ['<%= bower %>/codemirror/theme/rubyblue.css'], dest: '<%= dist %>/<%= bower %>/codemirror/theme/rubyblue.css', filter: 'isFile'}
         ]
       },
       template : {
