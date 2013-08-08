@@ -4,10 +4,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'karma']);
-
+  grunt.registerTask('default', ['jshint', 'karma:unit']);
+  grunt.registerTask('server', ['karma:start']);
   grunt.registerTask('build-doc', ['uglify', 'copy']);
 
   var testConfig = function (configFile, customOptions) {
@@ -44,8 +45,15 @@ module.exports = function (grunt) {
         ]
       }
     },
+    watch: {
+      karma: {
+        files: ['ui-codemirror.js', 'test/*.js'],
+        tasks: ['karma:unit:run'] //NOTE the :run flag
+      }
+    },
     karma: {
-      unit: testConfig('test/karma.conf.js')
+      unit: testConfig('test/karma.conf.js'),
+      start: {configFile: 'test/karma.conf.js'}
     },
     jshint:{
       all:['ui-codemirror.js', 'gruntFile.js','test/**/*.js'],
