@@ -26,10 +26,12 @@ angular.module('ui.codemirror', [])
             var newValue = instance.getValue();
             if (newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
-              if(!scope.$$phase){ scope.$apply(); }
             }
             if (typeof aEvent === "function") {
               aEvent(instance, changeObj);
+            }
+            if (!scope.$$phase) {
+              scope.$apply();
             }
           };
         };
@@ -72,7 +74,9 @@ angular.module('ui.codemirror', [])
             scope.$watch(attrs.uiRefresh, function (newVal, oldVal) {
               // Skip the initial watch firing
               if (newVal !== oldVal) {
-                $timeout(function(){codeMirror.refresh();});
+                $timeout(function () {
+                  codeMirror.refresh();
+                });
               }
             });
           }
