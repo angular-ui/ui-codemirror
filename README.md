@@ -125,3 +125,35 @@ $scope.isSomething = true;
 ```
 
 Note: the comparison operator between the old and the new value is "!=="
+
+
+### CodeMirror instance direct access
+
+For more interaction with the CodeMirror instance in the directive, we provide a direct access to it.
+Using
+
+```html
+<div ui-codemirror="{ onLoad : codemirrorLoaded }" ></div>
+```
+
+the `$scope.codemirrorLoaded` function will be called with the [CodeMirror editor instance](http://codemirror.net/doc/manual.html#CodeMirror) as first argument
+
+```javascript
+myAppModule.controller('MyController', [ '$scope', function($scope) {
+
+  $scope.codemirrorLoaded = function(_editor){
+    // Editor part
+    var _doc = _editor.getDoc();
+    _editor.focus();
+
+    // Options
+    _editor.setOption('firstLineNumber', 10);
+    _doc.markClean()
+
+    // Events
+    _editor.on("beforeChange", function(){ ... });
+    _editor.on("change", function(){ ... });
+  };
+
+}]);
+```

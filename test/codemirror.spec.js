@@ -145,6 +145,16 @@ describe('uiCodemirror', function () {
 				expect(codemirror.getValue()).toBe('');
 			});
 		});
+
+    it('should runs the onLoad callback', function () {
+      scope.codemirrorLoaded = function () {};
+      spyOn(scope, "codemirrorLoaded");
+      // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+      $compile('<div><textarea ui-codemirror="{onLoad: codemirrorLoaded}" ng-model="foo"></textarea></div>')(scope);
+      $timeout.flush();
+      expect(scope.codemirrorLoaded).toHaveBeenCalled();
+      expect(scope.codemirrorLoaded).toHaveBeenCalledWith(codemirror);
+    });
 	});
 
 	describe('when the model is an object or an array', function () {

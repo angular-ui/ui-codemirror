@@ -80,6 +80,11 @@ angular.module('ui.codemirror', [])
               }
             });
           }
+
+          // onLoad callback
+          if (angular.isFunction(opts.onLoad)) {
+            opts.onLoad(codeMirror);
+          }
         };
 
         $timeout(deferCodeMirror);
