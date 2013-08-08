@@ -217,6 +217,26 @@ describe('uiCodemirror', function () {
     });
 
 
+    it('when the IDE changes should use ngChange', function () {
+      scope.change = angular.noop;
+      spyOn(scope, "change").andCallFake(function() { expect(scope.foo).toBe('baz'); });
+
+      $compile('<div ui-codemirror ng-model="foo" ng-change="change()"></div>')(scope);
+
+      // change shouldn't be called initialy
+      expect(scope.change).not.toHaveBeenCalled();
+
+
+      // change shouldn't be called when the value change is coming from the model.
+      scope.$apply('foo = "bar"');
+      expect(scope.change).not.toHaveBeenCalled();
+
+      // change should be called when user changes the input.
+      codemirror.setValue('baz');
+      expect(scope.change.callCount).toBe(1);
+      expect(scope.change).toHaveBeenCalledWith();
+    });
+
     it('should runs the onLoad callback', function () {
       scope.codemirrorLoaded = angular.noop;
       spyOn(scope, "codemirrorLoaded");
