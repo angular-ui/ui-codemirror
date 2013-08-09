@@ -21,21 +21,6 @@ angular.module('ui.codemirror', [])
         options = uiCodemirrorConfig.codemirror || {};
         opts = angular.extend({}, options, scope.$eval(attrs.uiCodemirror));
 
-        if (angular.isDefined(scope[attrs.uiCodemirror])) {
-          scope.$watch(attrs.uiCodemirror, function (newValues) {
-            if (codeMirror === undefined) {
-              return;
-            }
-
-            for (var key in newValues) {
-              if (newValues.hasOwnProperty(key)) {
-                codeMirror.setOption(key, newValues[key]);
-              }
-            }
-          }, true);
-        }
-
-
         onChange = function (aEvent) {
           return function (instance, changeObj) {
             var newValue = instance.getValue();
@@ -53,6 +38,17 @@ angular.module('ui.codemirror', [])
 
         deferCodeMirror = function () {
           codeMirror = CodeMirror.fromTextArea(elm[0], opts);
+
+          if (angular.isDefined(scope[attrs.uiCodemirror])) {
+            scope.$watch(attrs.uiCodemirror, function (newValues) {
+              for (var key in newValues) {
+                if (newValues.hasOwnProperty(key)) {
+                  codeMirror.setOption(key, newValues[key]);
+                }
+              }
+            }, true);
+          }
+
           codeMirror.on("change", onChange(opts.onChange));
 
           for (var i = 0, n = events.length, aEvent; i < n; ++i) {
