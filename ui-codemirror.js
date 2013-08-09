@@ -21,17 +21,20 @@ angular.module('ui.codemirror', [])
         options = uiCodemirrorConfig.codemirror || {};
         opts = angular.extend({}, options, scope.$eval(attrs.uiCodemirror));
 
-        scope.$watch(attrs.uiCodemirror, function (newValues) {
-          if (codeMirror === undefined) {
-            return;
-          }
-
-          for (var key in newValues) {
-            if (newValues.hasOwnProperty(key)) {
-              codeMirror.setOption(key, newValues[key]);
+        if (angular.isDefined(scope[attrs.uiCodemirror])) {
+          scope.$watch(attrs.uiCodemirror, function (newValues) {
+            if (codeMirror === undefined) {
+              return;
             }
-          }
-        });
+
+            for (var key in newValues) {
+              if (newValues.hasOwnProperty(key)) {
+                codeMirror.setOption(key, newValues[key]);
+              }
+            }
+          }, true);
+        }
+
 
         onChange = function (aEvent) {
           return function (instance, changeObj) {
