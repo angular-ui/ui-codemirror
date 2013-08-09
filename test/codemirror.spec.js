@@ -57,9 +57,9 @@ describe('uiCodemirror', function () {
 		it('should watch the uiCodemirror attribute', function () {
 			spyOn(scope, '$watch');
       // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-			$compile('<div><textarea ui-codemirror ng-model="foo" uiRefresh="sdf"></textarea></div>')(scope);
+			$compile('<div><textarea ui-codemirror ng-model="foo" ui-refresh="sdf"></textarea></div>')(scope);
 			$timeout.flush();
-			expect(scope.$watch).toHaveBeenCalled();
+      expect(scope.$watch.callCount).toEqual(2); // The ngModel + the ui-refresh
 		});
 	});
 
