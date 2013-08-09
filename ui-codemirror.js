@@ -23,15 +23,15 @@ angular.module('ui.codemirror', [])
 
         scope.$watch(attrs.uiCodemirror, function (newValues) {
           if (codeMirror === undefined) {
-            return
+            return;
           }
 
           for (var key in newValues) {
             if (newValues.hasOwnProperty(key)) {
-              codeMirror.setOption(key, newValues[key])
+              codeMirror.setOption(key, newValues[key]);
             }
           }
-        })
+        });
 
         onChange = function (aEvent) {
           return function (instance, changeObj) {
