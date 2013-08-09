@@ -71,6 +71,8 @@ myAppModule.controller('MyController', [ '$scope', function($scope) {
 }]);
 ```
 
+If you update this variable with the new values, they will be merged and the ui will be updated.
+
 ```html
 <textarea ui-codemirror="editorOptions" ng-model="x"></textarea>
 ```
@@ -121,7 +123,7 @@ _The ui-refresh directive expects a scope variable that can be any thing...._
 Now you can set the _isSomething_ in the controller scope.
 
 ```javascript
-$scope.isSomething = true;	
+$scope.isSomething = true;
 ```
 
 Note: the comparison operator between the old and the new value is "!=="
