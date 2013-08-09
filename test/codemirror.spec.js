@@ -155,6 +155,24 @@ describe('uiCodemirror', function () {
       expect(scope.codemirrorLoaded).toHaveBeenCalled();
       expect(scope.codemirrorLoaded).toHaveBeenCalledWith(codemirror);
     });
+
+    it('should watch the options', function () {
+      var __watcher = scope.$watch;
+      spyOn(scope, '$watch').andCallFake(__watcher);
+
+      // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
+      $compile('<div><textarea ui-codemirror="cmOption" ng-model="foo"></textarea></div>')(scope);
+      scope.cmOption = { readOnly : true };
+      $timeout.flush();
+
+      expect(scope.$watch.callCount).toEqual(2); // The ngModel + the uiCodemirror
+      expect(scope.$watch).toHaveBeenCalledWith('cmOption', jasmine.any(Function), true);
+      expect(codemirror.getOption('readOnly')).toBeTruthy();
+
+      scope.cmOption.readOnly = false;
+      scope.$digest();
+      expect(codemirror.getOption('readOnly')).toBeFalsy();
+    });
 	});
 
 	describe('when the model is an object or an array', function () {
