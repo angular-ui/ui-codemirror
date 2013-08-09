@@ -47,8 +47,8 @@ module.exports = function (grunt) {
     },
     watch: {
       karma: {
-        files: ['ui-codemirror.js', 'test/*.js'],
-        tasks: ['karma:unit:run'] //NOTE the :run flag
+        files: ['ui-codemirror.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
+        tasks: ['jshint', 'karma:unit:run'] //NOTE the :run flag
       }
     },
     karma: {
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
       start: {configFile: 'test/karma.conf.js'}
     },
     jshint:{
-      all:['ui-codemirror.js', 'gruntFile.js','test/**/*.js'],
+      all:['ui-codemirror.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
       options:{
         curly:true,
         eqeqeq:true,
