@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 
   var css_dependencies = [
     '<%= bower %>/codemirror/lib/codemirror.css',
-    '<%= bower %>/codemirror/theme/rubyblue.css'
+    '<%= bower %>/codemirror/theme/twilight.css'
   ];
 
   // Project configuration.

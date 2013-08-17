@@ -1,7 +1,3 @@
-#demo-mini {
-  border: 1px solid #eee;
-}
-
-#demo-mini .CodeMirror {
-  height: 234px;
+.CodeMirror {
+  height: 256px;
 }

@@ -1,48 +1,174 @@
-
 <section id="codemirror" ng-app="doc.ui-codeMirror">
 
-  <div class="row">
-    <div class="span12"  ng-controller="CodemirrorCtrl">
-      <div class="page-header">
-        <h1 id="download">UI.CodeMirror: Mode-Changing demo</h1>
+
+<!-- =Minimal code
+--------------------------------------------------------------------------- -->
+<div id="demo-mini" class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>Minimal code</h1>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <div>
+          <textarea ui-codemirror ng-model="cmModel0">Code mirror here</textarea>
+        </div>
       </div>
-      <div>
-        <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+
+      <div class="span6" ng-controller="PlunkerCtrl"
+           ng-init="
+vendor_css=['http://codemirror.net/lib/codemirror.css'];
+vendor_js=['http://codemirror.net/lib/codemirror.js'];
+        "
+          >
+        <div class="pull-right">
+          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+            <i class="icon-edit icon-white"></i> Edit in plunker
+          </button>
+        </div>
+
+        <tabset>
+          <tab heading="Markup">
+            <div plunker-content="markup">
+<pre class="prettyprint">&lt;section&gt;
+
+  &lt;div&gt;
+    &lt;textarea ui-codemirror ng-model=&quot;cmModel&quot;&gt;
+      Code mirror here
+    &lt;/textarea&gt;
+  &lt;/div&gt;
+
+&lt;/section&gt;</pre>
+            </div>
+          </tab>
+        </tabset>
       </div>
-      Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()">
-    </select>
     </div>
   </div>
+</div>
 
-  <hr>
 
-  <div class="row">
+<!-- =General options demo
+--------------------------------------------------------------------------- -->
+<div id="demo-general" class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>General options</h1>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <div>
+          <textarea ui-codemirror="{
+              lineNumbers: true,
+              theme:'twilight',
+              readOnly: 'nocursor',
+              mode: 'xml'
+            }" ng-model="cmModel1">
+            <html style="color: green">
+            <!-- this is a comment -->
+            <head>
+              <title>HTML Example</title>
+            </head>
+            <body>
+            The indentation tries to be <em>somewhat &quot;do what
+              I mean&quot;</em>... but might not match your style.
+            </body>
+            </html>
+          </textarea>
+        </div>
+      </div>
 
-    <div class="span12" ng-controller="PlunkerCtrl"
-         ng-init="
+      <div class="span6" ng-controller="PlunkerCtrl"
+           ng-init="
+vendor_css=['http://codemirror.net/lib/codemirror.css', 'http://codemirror.net/theme/twilight.css'];
+vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mode/xml/xml.js'];
+        "
+          >
+        <div class="pull-right">
+          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+            <i class="icon-edit icon-white"></i> Edit in plunker
+          </button>
+        </div>
+
+        <tabset>
+          <tab heading="Markup">
+            <div plunker-content="markup">
+<pre class="prettyprint">&lt;section&gt;
+  &lt;div&gt;
+    &lt;textarea ui-codemirror=&quot;{
+      lineNumbers: true,
+      theme:&#39;twilight&#39;,
+      readOnly: &#39;nocursor&#39;,
+      mode: &#39;xml&#39;
+    }&quot; ng-model=&quot;cmModel&quot;&gt;&lt;html style=&quot;color: green&quot;&gt;
+  &lt;!-- this is a comment --&gt;
+  &lt;head&gt;
+  &lt;title&gt;HTML Example&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+  I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+  &lt;/body&gt;
+  &lt;/html&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+
+&lt;/section&gt;</pre>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =Mode-Changing demo
+--------------------------------------------------------------------------- -->
+<div id="demo-mode-changing" class="row">
+  <div class="span12" ng-controller="CodemirrorCtrl">
+    <div class="page-header">
+      <h1>Mode-Changing demo</h1>
+    </div>
+    <div>
+      <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+    </div>
+    Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()">
+  </select>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+
+  <div class="span12" ng-controller="PlunkerCtrl"
+       ng-init="
 vendor_css=['http://codemirror.net/lib/codemirror.css'];
 vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mode/scheme/scheme.js', 'http://codemirror.net/mode/javascript/javascript.js', 'http://codemirror.net/mode/xml/xml.js'];
         "
-        >
-      <div class="pull-right">
-        <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')"><i class="icon-edit icon-white"></i> Edit in plunker</button>
-      </div>
+      >
+    <div class="pull-right">
+      <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+        <i class="icon-edit icon-white"></i> Edit in plunker
+      </button>
+    </div>
 
-      <tabset>
-        <tab heading="Markup">
-          <div plunker-content="markup">
+    <tabset>
+      <tab heading="Markup">
+        <div plunker-content="markup">
 <pre class="prettyprint">&lt;section ng-controller=&quot;CodemirrorCtrl&quot;&gt;
+
   &lt;div&gt;
-  &lt;textarea ui-codemirror=&quot;cmOption&quot; ng-model=&quot;cmModel&quot;&gt;&lt;/textarea&gt;
+    &lt;textarea ui-codemirror=&quot;cmOption&quot; ng-model=&quot;cmModel&quot;&gt;&lt;/textarea&gt;
   &lt;/div&gt;
 
-  &lt;select ng-model=&quot;mode&quot; ng-options=&quot;c for c in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;
-  &lt;/select&gt;
+  &lt;select ng-model=&quot;mode&quot; ng-options=&quot;c for c in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;&lt;/select&gt;
+
 &lt;/section&gt;</pre>
-          </div>
-        </tab>
-        <tab heading="JavaScript">
-          <div plunker-content="javascript">
+        </div>
+      </tab>
+      <tab heading="JavaScript">
+        <div plunker-content="javascript">
 <pre class="prettyprint">app.controller(&#39;CodemirrorCtrl&#39;, [&#39;$scope&#39;, function($scope) {
 
   // The modes
@@ -74,10 +200,10 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
     &#39;function foo(msg) {\n\tvar r = Math.random();\n\treturn &quot;&quot; + r + &quot; : &quot; + msg;\n}&#39;;
 
 }]);</pre>
-          </div>
-        </tab>
-      </tabset>
-    </div>
+        </div>
+      </tab>
+    </tabset>
   </div>
+</div>
 
 </section>
