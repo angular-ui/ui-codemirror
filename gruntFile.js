@@ -50,7 +50,7 @@ module.exports = function (grunt) {
         repoName : "ui-codemirror",
         demoHTML : grunt.file.read("demo/demo.html"),
         demoJS : grunt.file.read("demo/demo.js"),
-        css : css_dependencies,
+        css: css_dependencies.concat(['assets/css/demo.css']),
         js : js_dependencies.concat(['build/ui-codemirror.min.js'])
       }
     },
@@ -98,9 +98,12 @@ module.exports = function (grunt) {
           return grunt.template.process(content);
         }},
         files: [
-          {src: ['<%= dist %>/.tmpl/index.tmpl'], dest: '<%= dist %>/index.html'}
-        ].concat(_.map(js_dependencies.concat(css_dependencies), function(f){
-            return {src: [f], dest: '<%= dist %>/' + f, filter: 'isFile'};
+          {src: ['<%= dist %>/.tmpl/index.tmpl'], dest: '<%= dist %>/index.html'},
+          {src: ['demo/demo.css'], dest: '<%= dist %>/assets/css/demo.css'}
+        ]
+          .concat(
+            _.map(js_dependencies.concat(css_dependencies), function (f) {
+              return {src: [f], dest: '<%= dist %>/' + f, filter: 'isFile'};
           }))
       }
     }
