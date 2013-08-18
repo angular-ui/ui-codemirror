@@ -11,7 +11,8 @@
     <link rel="stylesheet" type="text/css" href="assets/css/prettify.css"/>
 
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css"/>
-    <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/rubyblue.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/twilight.css"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/demo.css"/>
 
 
 </head>
@@ -93,27 +94,214 @@
   ================================================== -->
   <div class="container">
 
-    
-<section id="codemirror" ng-app="doc.ui-codeMirror" ng-controller="CodemirrorCtrl">
-  <div class="page-header">
-    <h1>CodeMirror</h1>
+    <section id="codemirror" ng-app="doc.ui-codeMirror">
+
+
+<!-- =Minimal code
+--------------------------------------------------------------------------- -->
+<div id="demo-mini" class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>Minimal code</h1>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <div>
+          <textarea ui-codemirror ng-model="cmModel0">Code mirror here</textarea>
+        </div>
+      </div>
+
+      <div class="span6" ng-controller="PlunkerCtrl"
+           ng-init="
+vendor_css=['http://codemirror.net/lib/codemirror.css'];
+vendor_js=['http://codemirror.net/lib/codemirror.js'];
+        "
+          >
+        <div class="pull-right">
+          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+            <i class="icon-edit icon-white"></i> Edit in plunker
+          </button>
+        </div>
+
+        <tabset>
+          <tab heading="Markup">
+            <div plunker-content="markup">
+<pre class="prettyprint">&lt;section&gt;
+
+  &lt;div&gt;
+    &lt;textarea ui-codemirror ng-model=&quot;cmModel&quot;&gt;
+      Code mirror here
+    &lt;/textarea&gt;
+  &lt;/div&gt;
+
+&lt;/section&gt;</pre>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
   </div>
-  <h3>What?</h3>
+</div>
 
-  <p>IDE? In <em>my</em> textareas? Surely you're joking.</p>
 
-  <p><textarea ui-codemirror="{
-                lineNumbers: true,
-                theme:'rubyblue'
-            }" ui-refresh="codeMirrorRefresh" ng-model="codeMirrorModel"></textarea></p>
+<!-- =General options demo
+--------------------------------------------------------------------------- -->
+<div id="demo-general" class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h1>General options</h1>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <div>
+          <textarea ui-codemirror="{
+              lineNumbers: true,
+              theme:'twilight',
+              readOnly: 'nocursor',
+              mode: 'xml'
+            }" ng-model="cmModel1">
+            <html style="color: green">
+            <!-- this is a comment -->
+            <head>
+              <title>HTML Example</title>
+            </head>
+            <body>
+            The indentation tries to be <em>somewhat &quot;do what
+              I mean&quot;</em>... but might not match your style.
+            </body>
+            </html>
+          </textarea>
+        </div>
+      </div>
 
-  <h3>How?</h3>
-    <pre class="prettyprint">
+      <div class="span6" ng-controller="PlunkerCtrl"
+           ng-init="
+vendor_css=['http://codemirror.net/lib/codemirror.css', 'http://codemirror.net/theme/twilight.css'];
+vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mode/xml/xml.js'];
+        "
+          >
+        <div class="pull-right">
+          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+            <i class="icon-edit icon-white"></i> Edit in plunker
+          </button>
+        </div>
+
+        <tabset>
+          <tab heading="Markup">
+            <div plunker-content="markup">
+<pre class="prettyprint">&lt;section&gt;
+  &lt;div&gt;
     &lt;textarea ui-codemirror=&quot;{
-        lineNumbers: true,
-        theme:&#39;rubyblue&#39;
-        }&quot; ui-refresh=&quot;codeMirrorRefresh&quot; ng-model=&quot;codeMirrorModel&quot;&gt;&lt;/textarea&gt;
-    </pre>
+      lineNumbers: true,
+      theme:&#39;twilight&#39;,
+      readOnly: &#39;nocursor&#39;,
+      mode: &#39;xml&#39;
+    }&quot; ng-model=&quot;cmModel&quot;&gt;&lt;html style=&quot;color: green&quot;&gt;
+  &lt;!-- this is a comment --&gt;
+  &lt;head&gt;
+  &lt;title&gt;HTML Example&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+  I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+  &lt;/body&gt;
+  &lt;/html&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+
+&lt;/section&gt;</pre>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =Mode-Changing demo
+--------------------------------------------------------------------------- -->
+<div id="demo-mode-changing" class="row">
+  <div class="span12" ng-controller="CodemirrorCtrl">
+    <div class="page-header">
+      <h1>Mode-Changing demo</h1>
+    </div>
+    <div>
+      <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+    </div>
+    Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()">
+  </select>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+
+  <div class="span12" ng-controller="PlunkerCtrl"
+       ng-init="
+vendor_css=['http://codemirror.net/lib/codemirror.css'];
+vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mode/scheme/scheme.js', 'http://codemirror.net/mode/javascript/javascript.js', 'http://codemirror.net/mode/xml/xml.js'];
+        "
+      >
+    <div class="pull-right">
+      <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
+        <i class="icon-edit icon-white"></i> Edit in plunker
+      </button>
+    </div>
+
+    <tabset>
+      <tab heading="Markup">
+        <div plunker-content="markup">
+<pre class="prettyprint">&lt;section ng-controller=&quot;CodemirrorCtrl&quot;&gt;
+
+  &lt;div&gt;
+    &lt;textarea ui-codemirror=&quot;cmOption&quot; ng-model=&quot;cmModel&quot;&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+
+  &lt;select ng-model=&quot;mode&quot; ng-options=&quot;c for c in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;&lt;/select&gt;
+
+&lt;/section&gt;</pre>
+        </div>
+      </tab>
+      <tab heading="JavaScript">
+        <div plunker-content="javascript">
+<pre class="prettyprint">app.controller(&#39;CodemirrorCtrl&#39;, [&#39;$scope&#39;, function($scope) {
+
+  // The modes
+  $scope.modes = [&#39;Scheme&#39;, &#39;XML&#39;, &#39;Javascript&#39;];
+  $scope.mode = $scope.modes[0];
+
+
+  // The ui-codemirror option
+  $scope.cmOption = {
+    lineNumbers: true,
+    tabMode: &quot;indent&quot;,
+    onLoad : function(_cm){
+
+      // HACK to have the codemirror instance in the scope...
+      $scope.modeChanged = function(){
+        _cm.setOption(&quot;mode&quot;, $scope.mode.toLowerCase());
+      };
+    }
+  };
+
+
+
+  // Initial code content...
+  $scope.cmModel = &#39;;; Scheme code in here.\n&#39; +
+    &#39;(define (double x)\n\t(* x x))\n\n\n&#39; +
+    &#39;&lt;!-- XML code in here. --&gt;\n&#39; +
+    &#39;&lt;root&gt;\n\t&lt;foo&gt;\n\t&lt;/foo&gt;\n\t&lt;bar/&gt;\n&lt;/root&gt;\n\n\n&#39; +
+    &#39;// Javascript code in here.\n&#39; +
+    &#39;function foo(msg) {\n\tvar r = Math.random();\n\treturn &quot;&quot; + r + &quot; : &quot; + msg;\n}&#39;;
+
+}]);</pre>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>
+
 </section>
 
   </div>
@@ -130,14 +318,45 @@
   <script src="core/prettifyDirective.js"></script>
   <script src="core/plunker.js"></script>
 
+  <script src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="bower_components/codemirror/lib/codemirror.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/codemirror/mode/scheme/scheme.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
+  <script src="bower_components/codemirror/mode/xml/xml.js" type="text/javascript" charset="utf-8"></script>
   <script src="build/ui-codemirror.min.js" type="text/javascript" charset="utf-8"></script>
 
   <script>
-    
-angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective' ])
+    angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective', 'ui.bootstrap', 'plunker' ])
   .controller('CodemirrorCtrl', ['$scope', function ($scope) {
-    $scope.codeMirrorModel = "CodeMirror Hello World";
+
+    // The modes
+    $scope.modes = ['Scheme', 'XML', 'Javascript'];
+    $scope.mode = $scope.modes[0];
+
+
+    // The ui-codemirror option
+    $scope.cmOption = {
+      lineNumbers: true,
+      tabMode: "indent",
+      onLoad: function (_cm) {
+
+        // HACK to have the codemirror instance in the scope...
+        $scope.modeChanged = function () {
+          _cm.setOption("mode", $scope.mode.toLowerCase());
+        };
+
+      }
+    };
+
+
+    // Initial code content...
+    $scope.cmModel = ';; Scheme code in here.\n' +
+      '(define (double x)\n\t(* x x))\n\n\n' +
+      '<!-- XML code in here. -->\n' +
+      '<root>\n\t<foo>\n\t</foo>\n\t<bar/>\n</root>\n\n\n' +
+      '// Javascript code in here.\n' +
+      'function foo(msg) {\n\tvar r = Math.random();\n\treturn "" + r + " : " + msg;\n}';
+
   }]);
   </script>
 
