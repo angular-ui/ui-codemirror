@@ -122,9 +122,8 @@ describe('uiCodemirror', function () {
 			it('should update the IDE', function () {
         // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
 				var element = $compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
-				scope.foo = 'bar';
-				scope.$apply();
-				$timeout.flush();
+        scope.$apply('foo = "bar"');
+        $timeout.flush();
 				expect(codemirror.getValue()).toBe(scope.foo);
 			});
 		});
@@ -135,7 +134,7 @@ describe('uiCodemirror', function () {
 				var element = $compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
 				scope.$apply();
 				$timeout.flush();
-				expect(scope.foo).toBe(undefined);
+				expect(scope.foo).toBe('');
 				expect(codemirror.getValue()).toBe('');
 				scope.$apply('foo = "bar"');
 				expect(scope.foo).toBe('bar');

@@ -80,6 +80,11 @@ angular.module('ui.codemirror', [])
             codeMirror.setValue(ngModel.$viewValue);
           };
 
+          if (!ngModel.$viewValue){
+            ngModel.$setViewValue(elm.text());
+            ngModel.$render();
+          }
+
           // Watch ui-refresh and refresh the directive
           if (attrs.uiRefresh) {
             scope.$watch(attrs.uiRefresh, function (newVal, oldVal) {
