@@ -1,5 +1,7 @@
 module.exports = function (grunt) {
 
+  var _ = grunt.util._;
+
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -16,6 +18,19 @@ module.exports = function (grunt) {
     var travisOptions = process.env.TRAVIS && { browsers: [ 'Firefox', 'PhantomJS'], reporters: ['dots'] };
     return grunt.util._.extend(options, customOptions, travisOptions);
   };
+
+  var js_dependencies =[
+    '<%= bower %>/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js',
+    '<%= bower %>/codemirror/lib/codemirror.js',
+    '<%= bower %>/codemirror/mode/scheme/scheme.js',
+    '<%= bower %>/codemirror/mode/javascript/javascript.js',
+    '<%= bower %>/codemirror/mode/xml/xml.js',
+  ];
+
+  var css_dependencies = [
+    '<%= bower %>/codemirror/lib/codemirror.css',
+    '<%= bower %>/codemirror/theme/twilight.css'
+  ];
 
   // Project configuration.
   grunt.initConfig({
@@ -35,14 +50,8 @@ module.exports = function (grunt) {
         repoName : "ui-codemirror",
         demoHTML : grunt.file.read("demo/demo.html"),
         demoJS : grunt.file.read("demo/demo.js"),
-        css : [
-          '<%= bower %>/codemirror/lib/codemirror.css',
-          '<%= bower %>/codemirror/theme/rubyblue.css'
-        ],
-        js : [
-          '<%= bower %>/codemirror/lib/codemirror.js',
-          'build/ui-codemirror.min.js'
-        ]
+        css: css_dependencies.concat(['assets/css/demo.css']),
+        js : js_dependencies.concat(['build/ui-codemirror.min.js'])
       }
     },
     watch: {
@@ -81,10 +90,7 @@ module.exports = function (grunt) {
     copy: {
       main: {
         files: [
-          {src: ['<%= meta.view.repoName %>.js'], dest: '<%= dist %>/build/<%= meta.view.repoName %>.js', filter: 'isFile'},
-          {src: ['<%= bower %>/codemirror/lib/codemirror.js'], dest: '<%= dist %>/<%= bower %>/codemirror/lib/codemirror.js', filter: 'isFile'},
-          {src: ['<%= bower %>/codemirror/lib/codemirror.css'], dest: '<%= dist %>/<%= bower %>/codemirror/lib/codemirror.css', filter: 'isFile'},
-          {src: ['<%= bower %>/codemirror/theme/rubyblue.css'], dest: '<%= dist %>/<%= bower %>/codemirror/theme/rubyblue.css', filter: 'isFile'}
+          {src: ['<%= meta.view.repoName %>.js'], dest: '<%= dist %>/build/<%= meta.view.repoName %>.js', filter: 'isFile'}
         ]
       },
       template : {
@@ -92,8 +98,13 @@ module.exports = function (grunt) {
           return grunt.template.process(content);
         }},
         files: [
-          {src: ['<%= dist %>/.tmpl/index.tmpl'], dest: '<%= dist %>/index.html'}
+          {src: ['<%= dist %>/.tmpl/index.tmpl'], dest: '<%= dist %>/index.html'},
+          {src: ['demo/demo.css'], dest: '<%= dist %>/assets/css/demo.css'}
         ]
+          .concat(
+            _.map(js_dependencies.concat(css_dependencies), function (f) {
+              return {src: [f], dest: '<%= dist %>/' + f, filter: 'isFile'};
+          }))
       }
     }
   });
