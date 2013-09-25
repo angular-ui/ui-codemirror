@@ -74,6 +74,19 @@ angular.module('ui.codemirror', [])
               }
               return value;
             });
+			
+            // Update valid and dirty statuses
+            ngModel.$parsers.push(function (value) {
+                var div = elm.next();
+                div
+                  .toggleClass('ng-invalid', !ngModel.$valid)
+                  .toggleClass('ng-valid', ngModel.$valid)
+                  .toggleClass('ng-dirty', ngModel.$dirty)
+                  .toggleClass('ng-pristine', ngModel.$pristine);
+
+                return value;
+            });
+				
   
             // Override the ngModelController $render method, which is what gets called when the model is updated.
             // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
