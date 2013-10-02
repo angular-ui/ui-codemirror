@@ -91,7 +91,7 @@ angular.module('ui.codemirror', [])
             // Override the ngModelController $render method, which is what gets called when the model is updated.
             // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
             ngModel.$render = function () {
-              codeMirror.setValue(ngModel.$viewValue);
+              codeMirror.setValue(ngModel.$viewValue || '');		//Code mirror expectes a string so make sure it gets one
             };
   
             if (!ngModel.$viewValue){
