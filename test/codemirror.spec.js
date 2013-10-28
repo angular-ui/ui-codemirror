@@ -1,4 +1,3 @@
-/*global beforeEach, afterEach, describe, it, inject, expect, module, spyOn, CodeMirror, angular, $*/
 /**
  * TODO Test all the CodeMirror events : cursorActivity viewportChange gutterClick focus blur scroll update.
  *      with  <textarea ui-codemirror="{onChange: doChange ,onCursorActivity: doSomething}" ng-model="foo">
@@ -32,7 +31,7 @@ describe('uiCodemirror', function () {
 	describe('compiling this directive', function () {
 		it('should throw an error if used against a non-textarea', function () {
 			function compile() {
-				$compile('<div ui-codemirror ng-model="foo"></div>')(scope);
+				$compile('<div ui-codemirror></div>')(scope);
 			}
 
 			expect(compile).toThrow();
@@ -40,18 +39,10 @@ describe('uiCodemirror', function () {
 
 		it('should not throw an error when used against a textarea', function () {
 			function compile() {
-				$compile('<textarea ui-codemirror ng-model="foo"></textarea>')(scope);
-			}
-
-			expect(compile).not.toThrow();
-		});
-
-		it('should throw an error when no ngModel attribute defined', function () {
-			function compile() {
 				$compile('<textarea ui-codemirror></textarea>')(scope);
 			}
 
-			expect(compile).toThrow();
+			expect(compile).not.toThrow();
 		});
 
 		it('should watch the uiCodemirror attribute', function () {
@@ -78,14 +69,14 @@ describe('uiCodemirror', function () {
 		describe('verify the directive options', function () {
 			it('should include the passed options', function () {
         // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-				$compile('<div><textarea ui-codemirror="{oof: \'baar\'}" ng-model="foo"></textarea></div>')(scope);
+				$compile('<div><textarea ui-codemirror="{oof: \'baar\'}"></textarea></div>')(scope);
 				$timeout.flush();
 				expect(CodeMirror.fromTextArea.mostRecentCall.args[1].oof).toEqual("baar");
 			});
 
 			it('should include the default options', function () {
         // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-				$compile('<div><textarea ui-codemirror ng-model="foo"></textarea></div>')(scope);
+				$compile('<div><textarea ui-codemirror></textarea></div>')(scope);
 				$timeout.flush();
 				expect(CodeMirror.fromTextArea.mostRecentCall.args[1].bar).toEqual('baz');
 			});
@@ -94,7 +85,7 @@ describe('uiCodemirror', function () {
 		describe('when uiRefresh is added', function () {
 			it('should trigger the CodeMirror.refresh() method', function () {
         // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-				$compile('<div><textarea ui-codemirror ng-model="foo" ui-refresh="bar"></textarea></div>')(scope);
+				$compile('<div><textarea ui-codemirror ui-refresh="bar"></textarea></div>')(scope);
 				$timeout.flush();
 				var spy = spyOn(codemirror, 'refresh');
 				scope.$apply('bar = true');
@@ -149,7 +140,7 @@ describe('uiCodemirror', function () {
       scope.codemirrorLoaded = function () {};
       spyOn(scope, "codemirrorLoaded");
       // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-      $compile('<div><textarea ui-codemirror="{onLoad: codemirrorLoaded}" ng-model="foo"></textarea></div>')(scope);
+      $compile('<div><textarea ui-codemirror="{onLoad: codemirrorLoaded}"></textarea></div>')(scope);
       $timeout.flush();
       expect(scope.codemirrorLoaded).toHaveBeenCalled();
       expect(scope.codemirrorLoaded).toHaveBeenCalledWith(codemirror);
@@ -160,11 +151,11 @@ describe('uiCodemirror', function () {
       spyOn(scope, '$watch').andCallFake(__watcher);
 
       // Must have a parentNode for insertBefore (see https://github.com/marijnh/CodeMirror/blob/v3.11/lib/codemirror.js#L3390)
-      $compile('<div><textarea ui-codemirror="cmOption" ng-model="foo"></textarea></div>')(scope);
+      $compile('<div><textarea ui-codemirror="cmOption"></textarea></div>')(scope);
       scope.cmOption = { readOnly : true };
       $timeout.flush();
 
-      expect(scope.$watch.callCount).toEqual(2); // The ngModel + the uiCodemirror
+      expect(scope.$watch.callCount).toEqual(1); // the uiCodemirror option
       expect(scope.$watch).toHaveBeenCalledWith('cmOption', jasmine.any(Function), true);
       expect(codemirror.getOption('readOnly')).toBeTruthy();
 
