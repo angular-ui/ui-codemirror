@@ -10,7 +10,7 @@ angular.module('ui.codemirror', [])
     var events = ["cursorActivity", "viewportChange", "gutterClick", "focus", "blur", "scroll", "update"];
     return {
       restrict: 'A',
-      require: 'ngModel',
+      require: '?ngModel',
       link: function (scope, elm, attrs, ngModel) {
         var options, opts, onChange, deferCodeMirror, codeMirror;
 
@@ -24,7 +24,7 @@ angular.module('ui.codemirror', [])
         onChange = function (aEvent) {
           return function (instance, changeObj) {
             var newValue = instance.getValue();
-            if (newValue !== ngModel.$viewValue) {
+            if (ngModel && newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
             }
             if (typeof aEvent === "function") {
@@ -62,27 +62,42 @@ angular.module('ui.codemirror', [])
             codeMirror.on(events[i], aEvent);
           }
 
-          // CodeMirror expects a string, so make sure it gets one.
-          // This does not change the model.
-          ngModel.$formatters.push(function (value) {
-            if (angular.isUndefined(value) || value === null) {
-              return '';
-            }
-            else if (angular.isObject(value) || angular.isArray(value)) {
-              throw new Error('ui-codemirror cannot use an object or an array as a model');
-            }
-            return value;
-          });
+          if(ngModel){
+            // CodeMirror expects a string, so make sure it gets one.
+            // This does not change the model.
+            ngModel.$formatters.push(function (value) {
+              if (angular.isUndefined(value) || value === null) {
+                return '';
+              }
+              else if (angular.isObject(value) || angular.isArray(value)) {
+                throw new Error('ui-codemirror cannot use an object or an array as a model');
+              }
+              return value;
+            });
+			
+            // Update valid and dirty statuses
+            ngModel.$parsers.push(function (value) {
+                var div = elm.next();
+                div
+                  .toggleClass('ng-invalid', !ngModel.$valid)
+                  .toggleClass('ng-valid', ngModel.$valid)
+                  .toggleClass('ng-dirty', ngModel.$dirty)
+                  .toggleClass('ng-pristine', ngModel.$pristine);
 
-          // Override the ngModelController $render method, which is what gets called when the model is updated.
-          // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
-          ngModel.$render = function () {
-            codeMirror.setValue(ngModel.$viewValue);
-          };
-
-          if (!ngModel.$viewValue){
-            ngModel.$setViewValue(elm.text());
-            ngModel.$render();
+                return value;
+            });
+				
+  
+            // Override the ngModelController $render method, which is what gets called when the model is updated.
+            // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
+            ngModel.$render = function () {
+              codeMirror.setValue(ngModel.$viewValue);
+            };
+  
+            if (!ngModel.$viewValue){
+              ngModel.$setViewValue(elm.text());
+              ngModel.$render();
+            }
           }
 
           // Watch ui-refresh and refresh the directive
