@@ -66,7 +66,7 @@ The ng-model will be watched for to set the CodeMirror document value (by [setVa
 
 _The ui-codemirror directive stores and expects the model value to be a standard javascript String._
 
-### ui-codemirror events
+### ui-codemirror events [DEAD : use onLoad !]
 The [CodeMirror events](http://codemirror.net/doc/manual.html#events) are supported has configuration options.
 They keep the same name but are prefixed by _on_..
 _This directive expects the events to be javascript Functions._
