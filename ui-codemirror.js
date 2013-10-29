@@ -18,6 +18,7 @@ angular.module('ui.codemirror', [])
 
         // Create a codemirror instance with
         // - the function that will to place the editor into the document.
+        // - the initial content of the editor.
         //   see http://codemirror.net/doc/manual.html#api_constructor
         var value = tElement.text();
         var codeMirror = new CodeMirror(function (cm_el) {
@@ -36,7 +37,7 @@ angular.module('ui.codemirror', [])
           }
 
           tElement.replaceWith(cm_el);
-        });
+        }, {value: value});
 
         return  function postLink(scope, iElement, iAttrs, ngModel) {
 

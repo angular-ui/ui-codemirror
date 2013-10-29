@@ -71,7 +71,7 @@ describe('uiCodemirror', function () {
       $compile('<div ui-codemirror></div>')(scope);
 
       expect(CodeMirror.callCount).toEqual(1);
-      expect(CodeMirror).toHaveBeenCalledWith(jasmine.any(Function));
+      expect(CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
 
       expect(codemirror).toBeDefined();
     });
