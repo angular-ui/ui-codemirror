@@ -9,7 +9,7 @@ angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective', 'ui.b
     // The ui-codemirror option
     $scope.cmOption = {
       lineNumbers: true,
-      tabMode: "indent",
+      indentWithTabs: true,
       onLoad: function (_cm) {
 
         // HACK to have the codemirror instance in the scope...

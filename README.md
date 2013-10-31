@@ -31,11 +31,20 @@ Add the UI.Codemirror module as a dependency to your application module:
 var myAppModule = angular.module('MyApp', ['ui.codemirror']);
 ```
 
-Finally, add the directive to your html:
+Finally, add the directive to your html,
+as attribute :
 
 ```html
-<textarea ui-codemirror ng-model="x"></textarea>
+<textarea ui-codemirror></textarea>
+// or
+<div ui-codemirror></div>
 ```
+
+as element :
+```xml
+<ui-codemirror></ui-codemirror>
+```
+
 
 ## Options
 
@@ -54,8 +63,10 @@ myAppModule.controller('MyController', [ '$scope', function($scope) {
 
 If you update this variable with the new values, they will be merged and the ui will be updated.
 
-```html
+```xml
 <textarea ui-codemirror="editorOptions" ng-model="x"></textarea>
+// or
+<ui-codemirror ui-codemirror-opts="editorOptions"></ui-codemirror>
 ```
 
 ### Working with ng-model
@@ -66,7 +77,7 @@ The ng-model will be watched for to set the CodeMirror document value (by [setVa
 
 _The ui-codemirror directive stores and expects the model value to be a standard javascript String._
 
-### ui-codemirror events
+### ui-codemirror events [DEAD : use onLoad !]
 The [CodeMirror events](http://codemirror.net/doc/manual.html#events) are supported has configuration options.
 They keep the same name but are prefixed by _on_..
 _This directive expects the events to be javascript Functions._

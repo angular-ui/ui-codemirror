@@ -10,9 +10,7 @@
     </div>
     <div class="row">
       <div class="span6">
-        <div>
-          <textarea ui-codemirror ng-model="cmModel0">Code mirror here</textarea>
-        </div>
+        <div ui-codemirror>Code mirror here</div>
       </div>
 
       <div class="span6" ng-controller="PlunkerCtrl"
@@ -32,11 +30,7 @@ vendor_js=['http://codemirror.net/lib/codemirror.js'];
             <div plunker-content="markup">
 <pre class="prettyprint">&lt;section&gt;
 
-  &lt;div&gt;
-    &lt;textarea ui-codemirror ng-model=&quot;cmModel&quot;&gt;
-      Code mirror here
-    &lt;/textarea&gt;
-  &lt;/div&gt;
+  &lt;div ui-codemirror &gt;Code mirror here&lt;/div&gt;
 
 &lt;/section&gt;</pre>
             </div>
@@ -57,25 +51,22 @@ vendor_js=['http://codemirror.net/lib/codemirror.js'];
     </div>
     <div class="row">
       <div class="span6">
-        <div>
-          <textarea ui-codemirror="{
+        <div ui-codemirror="{
               lineNumbers: true,
               theme:'twilight',
               readOnly: 'nocursor',
+              lineWrapping : true,
               mode: 'xml'
-            }" ng-model="cmModel1">
-<html style="color: green">
-<!-- this is a comment -->
-<head>
-  <title>HTML Example</title>
-</head>
-<body>
-The indentation tries to be <em>somewhat &quot;do what
-  I mean&quot;</em>... but might not match your style.
-</body>
-</html>
-          </textarea>
-        </div>
+            }">&lt;html style=&quot;color: green&quot;&gt;
+&lt;!-- this is a comment --&gt;
+&lt;head&gt;
+&lt;title&gt;HTML Example&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
+I mean&amp;quot;&lt;/em&gt;... but might not match your style.
+&lt;/body&gt;
+&lt;/html&gt;</div>
       </div>
 
       <div class="span6" ng-controller="PlunkerCtrl"
@@ -94,23 +85,22 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
           <tab heading="Markup">
             <div plunker-content="markup">
 <pre class="prettyprint">&lt;section&gt;
-  &lt;div&gt;
-    &lt;textarea ui-codemirror=&quot;{
+  &lt;div ui-codemirror=&quot;{
       lineNumbers: true,
       theme:&#39;twilight&#39;,
       readOnly: &#39;nocursor&#39;,
+      lineWrapping : true,
       mode: &#39;xml&#39;
-    }&quot; ng-model=&quot;cmModel&quot;&gt;&lt;html style=&quot;color: green&quot;&gt;
-  &lt;!-- this is a comment --&gt;
-  &lt;head&gt;
-  &lt;title&gt;HTML Example&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-  The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
-  I mean&amp;quot;&lt;/em&gt;... but might not match your style.
-  &lt;/body&gt;
-  &lt;/html&gt;&lt;/textarea&gt;
-  &lt;/div&gt;
+    }&quot; &gt;&amp;lt;html style=&amp;quot;color: green&amp;quot;&amp;gt;
+&amp;lt;!-- this is a comment --&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;title&amp;gt;HTML Example&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+The indentation tries to be &amp;lt;em&amp;gt;somewhat &amp;amp;quot;do what
+I mean&amp;amp;quot;&amp;lt;/em&amp;gt;... but might not match your style.
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/div&gt;
 
 &lt;/section&gt;</pre>
             </div>
@@ -129,11 +119,8 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
     <div class="page-header">
       <h1>Mode-Changing demo</h1>
     </div>
-    <div>
-      <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
-    </div>
-    Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()">
-  </select>
+    <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+    Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
   </div>
 </div>
 
@@ -158,11 +145,9 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
         <div plunker-content="markup">
 <pre class="prettyprint">&lt;section ng-controller=&quot;CodemirrorCtrl&quot;&gt;
 
-  &lt;div&gt;
-    &lt;textarea ui-codemirror=&quot;cmOption&quot; ng-model=&quot;cmModel&quot;&gt;&lt;/textarea&gt;
-  &lt;/div&gt;
+  &lt;textarea ui-codemirror=&quot;cmOption&quot; ng-model=&quot;cmModel&quot;&gt;&lt;/textarea&gt;
 
-  &lt;select ng-model=&quot;mode&quot; ng-options=&quot;c for c in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;&lt;/select&gt;
+  Mode : &lt;select ng-model=&quot;mode&quot; ng-options=&quot;m for m in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;&lt;/select&gt;
 
 &lt;/section&gt;</pre>
         </div>
@@ -179,7 +164,7 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
   // The ui-codemirror option
   $scope.cmOption = {
     lineNumbers: true,
-    tabMode: &quot;indent&quot;,
+    indentWithTabs: true,
     onLoad : function(_cm){
 
       // HACK to have the codemirror instance in the scope...
