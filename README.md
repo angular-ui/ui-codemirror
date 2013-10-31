@@ -77,31 +77,6 @@ The ng-model will be watched for to set the CodeMirror document value (by [setVa
 
 _The ui-codemirror directive stores and expects the model value to be a standard javascript String._
 
-### ui-codemirror events [DEAD : use onLoad !]
-The [CodeMirror events](http://codemirror.net/doc/manual.html#events) are supported has configuration options.
-They keep the same name but are prefixed by _on_..
-_This directive expects the events to be javascript Functions._
-For example to handle changes of in the editor, we use _onChange_
-
-```html
-<textarea ui-codemirror="{
-            lineWrapping : true,
-            lineNumbers: true,
-            mode: 'javascript',
-            onChange: reParseInput
-        }" ng-model="x"></textarea>
-```
-
-Now you can set the _reParseInput_ function in the controller.
-
-```javascript
-$scope.reParseInput = function(){
-	$scope.errorMsg = "";
-	$timeout.cancel(pending);
-	pending = $timeout($scope.workHere, 500);
-};
-```
-
 ### ui-refresh directive
 
 If you apply the refresh directive to element then any change to do this scope value will result to a [refresh of the CodeMirror instance](http://codemirror.net/doc/manual.html#refresh).
