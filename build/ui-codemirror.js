@@ -65,9 +65,6 @@ angular.module('ui.codemirror', [])
             if (ngModel && newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
             }
-            if (angular.isFunction(opts.onChange)) {
-              opts.onChange(instance, changeObj);
-            }
             if (!scope.$$phase) {
               scope.$apply();
             }
