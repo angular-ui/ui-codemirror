@@ -5,12 +5,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
-  grunt.registerTask('server', ['karma:start']);
+  grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
   grunt.registerTask('build-doc', ['uglify', 'copy']);
 
   var testConfig = function (configFile, customOptions) {
@@ -55,17 +56,34 @@ module.exports = function (grunt) {
       }
     },
     watch: {
-      karma: {
-        files: ['ui-codemirror.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
-        tasks: ['jshint', 'karma:unit:run'] //NOTE the :run flag
+      test: {
+        files: ['<%= meta.view.repoName %>.js', 'test/*.js'],
+        tasks: ['jshint', 'karma:unit:run']
+      },
+      demo: {
+        files: ['demo/*', '<%= meta.view.repoName %>.js'],
+        tasks: ['uglify', 'copy']
       }
     },
     karma: {
       unit: testConfig('test/karma.conf.js'),
-      start: {configFile: 'test/karma.conf.js'}
+      server: {configFile: 'test/karma.conf.js'},
+      continuous: {configFile: 'test/karma.conf.js',  background: true }
     },
+
+    connect: {
+      options: {
+        base : '<%= dist %>',
+        port: grunt.option('port') || '8000',
+        hostname: grunt.option('host') || 'localhost',
+        open : true
+      },
+      server: { options: { keepalive: true } },
+      continuous: { options: { keepalive: false } }
+    },
+
     jshint:{
-      all:['ui-codemirror.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
+      all:['<%= meta.view.repoName %>.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
       options:{
         curly:true,
         eqeqeq:true,
