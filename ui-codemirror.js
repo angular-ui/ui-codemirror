@@ -7,7 +7,7 @@ angular.module('ui.codemirror', [])
     'use strict';
 
     return {
-      restrict: 'A',
+      restrict: 'EA',
       require: '?ngModel',
       compile: function compile(tElement, tAttrs, transclude) {
 
@@ -44,7 +44,7 @@ angular.module('ui.codemirror', [])
           var options, opts, onChange;
 
           options = uiCodemirrorConfig.codemirror || {};
-          opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror));
+          opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
 
           function updateOptions(newValues) {
             for (var key in newValues) {

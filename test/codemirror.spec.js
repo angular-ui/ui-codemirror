@@ -43,6 +43,7 @@ describe('uiCodemirror', function () {
     expect(compile).not.toThrow();
   });
 
+
   it('should watch all uiCodemirror attribute', function () {
     spyOn(scope, '$watch');
     scope.cmOption = {};
@@ -76,6 +77,15 @@ describe('uiCodemirror', function () {
       expect(codemirror).toBeDefined();
     });
 
+    it('should work as an element', function () {
+      $compile('<ui-codemirror></ui-codemirror>')(scope);
+
+      expect(CodeMirror.callCount).toEqual(1);
+      expect(CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
+
+      expect(codemirror).toBeDefined();
+    });
+
     it('should replace the element with a div.CodeMirror', function () {
       // Explicit a parent node to support the scope.
       var element = $compile('<div><div ui-codemirror></div></div>')(scope).children();
@@ -101,6 +111,12 @@ describe('uiCodemirror', function () {
 
       it('should include the passed options', function () {
         $compile('<div ui-codemirror="{oof: \'baar\'}"></div>')(scope);
+
+        expect(codemirror.setOption).toHaveBeenCalled();
+        expect(codemirror.setOption.calls.length).toEqual(1);
+        expect(codemirror.setOption).toHaveBeenCalledWith("oof", "baar");
+
+        $compile('<ui-codemirror ui-codemirror-opts="{oof: \'baar\'}"></ui-codemirror>')(scope);
 
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(1);
