@@ -9,6 +9,7 @@ angular.module('ui.codemirror', [])
     return {
       restrict: 'EA',
       require: '?ngModel',
+      priority: 1,
       compile: function compile(tElement, tAttrs, transclude) {
 
         // Require CodeMirror
