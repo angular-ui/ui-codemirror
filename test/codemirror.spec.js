@@ -262,6 +262,23 @@ describe('uiCodemirror', function () {
       scope.$digest();
       expect(codemirror.getOption('readOnly')).toBeFalsy();
     });
+
+    it('should watch the options (object property)', function () {
+      spyOn(scope, '$watch').andCallThrough();
+
+      scope.cm = {};
+      scope.cm.option = { readOnly: true };
+      $compile('<div ui-codemirror="cm.option"></div>')(scope);
+
+      expect(scope.$watch.callCount).toEqual(1); // the uiCodemirror option
+      expect(scope.$watch).toHaveBeenCalledWith('cm.option', jasmine.any(Function), true);
+      expect(codemirror.getOption('readOnly')).toBeTruthy();
+
+      scope.cm.option.readOnly = false;
+      scope.$digest();
+      expect(codemirror.getOption('readOnly')).toBeFalsy();
+    });
+
   });
 
   it('when the model is an object or an array should throw an error', function () {
