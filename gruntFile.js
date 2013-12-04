@@ -8,6 +8,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-conventional-changelog');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
@@ -123,6 +124,11 @@ module.exports = function (grunt) {
             _.map(js_dependencies.concat(css_dependencies), function (f) {
               return {src: [f], dest: '<%= dist %>/' + f, filter: 'isFile'};
           }))
+      }
+    },
+    changelog: {
+      options: {
+        dest: 'CHANGELOG.md'
       }
     }
   });
