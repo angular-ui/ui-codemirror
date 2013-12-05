@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+  'use strict';
 
   var _ = grunt.util._;
 
@@ -42,10 +43,10 @@ module.exports = function (grunt) {
         ' */',
         ''].join('\n'),
       view : {
-        humaName : "UI CodeMirror",
-        repoName : "ui-codemirror",
-        demoHTML : grunt.file.read("demo/demo.html"),
-        demoJS : grunt.file.read("demo/demo.js"),
+        humaName : 'UI CodeMirror',
+        repoName : 'ui-codemirror',
+        demoHTML : grunt.file.read('demo/demo.html'),
+        demoJS : grunt.file.read('demo/demo.js'),
         css: css_dependencies.concat(['assets/css/demo.css']),
         js : js_dependencies.concat(['build/ui-codemirror.min.js'])
       }
