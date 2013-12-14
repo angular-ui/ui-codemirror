@@ -1,14 +1,12 @@
 module.exports = function (grunt) {
   'use strict';
 
-  var _ = grunt.util._;
-
   require('load-grunt-tasks')(grunt);
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
-  grunt.registerTask('build-doc', ['uglify', 'copy']);
+  grunt.registerTask('dist', ['ngmin', 'uglify']);
 
   // HACK TO ACCESS TO THE COMPONENT-PUBLISHER
   function fakeTargetTask(prefix){
@@ -35,19 +33,6 @@ module.exports = function (grunt) {
     return grunt.util._.extend(options, customOptions, travisOptions);
   };
 
-  var js_dependencies =[
-    '<%= bower %>/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js',
-    '<%= bower %>/codemirror/lib/codemirror.js',
-    '<%= bower %>/codemirror/mode/scheme/scheme.js',
-    '<%= bower %>/codemirror/mode/javascript/javascript.js',
-    '<%= bower %>/codemirror/mode/xml/xml.js',
-  ];
-
-  var css_dependencies = [
-    '<%= bower %>/codemirror/lib/codemirror.css',
-    '<%= bower %>/codemirror/theme/twilight.css'
-  ];
-
   // Project configuration.
   grunt.initConfig({
     bower: 'bower_components',
@@ -60,26 +45,24 @@ module.exports = function (grunt) {
         ' * @link <%= pkg.homepage %>',
         ' * @license <%= pkg.license %>',
         ' */',
-        ''].join('\n'),
-      view : {
-        humaName : 'UI CodeMirror',
-        repoName : 'ui-codemirror',
-        demoHTML : grunt.file.read('demo/demo.html'),
-        demoJS : grunt.file.read('demo/demo.js'),
-        css: css_dependencies.concat(['assets/css/demo.css']),
-        js : js_dependencies.concat(['build/ui-codemirror.min.js'])
-      }
+        ''].join('\n')
     },
+
     watch: {
+      src: {
+        files: ['src/*'],
+        tasks: ['jshint', 'karma:unit:run', 'dist', 'build:gh-pages']
+      },
       test: {
-        files: ['<%= meta.view.repoName %>.js', 'test/*.js'],
+        files: ['test/*.js'],
         tasks: ['jshint', 'karma:unit:run']
       },
       demo: {
-        files: ['demo/*', '<%= meta.view.repoName %>.js'],
-        tasks: ['uglify', 'copy']
+        files: ['demo/*'],
+        tasks: ['build:gh-pages']
       }
     },
+
     karma: {
       unit: testConfig('test/karma.conf.js'),
       server: {configFile: 'test/karma.conf.js'},
@@ -88,58 +71,41 @@ module.exports = function (grunt) {
 
     connect: {
       options: {
-        base : '<%= dist %>',
+        base : 'out/built/gh-pages',
         port: grunt.option('port') || '8000',
         hostname: grunt.option('host') || 'localhost',
-        open : true
+        open: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>',
+        livereload: grunt.option('port') || '8000'
       },
       server: { options: { keepalive: true } },
       continuous: { options: { keepalive: false } }
     },
 
     jshint:{
-      all:['<%= meta.view.repoName %>.js', 'gruntFile.js','test/*.js', 'demo/*.js'],
-      options:{
-        curly:true,
-        eqeqeq:true,
-        immed:true,
-        latedef:true,
-        newcap:true,
-        noarg:true,
-        sub:true,
-        boss:true,
-        eqnull:true,
-        globals:{}
-      }
+      files:['src/*.js', 'demo/**/*.js', 'gruntFile.js'],
+      options: { jshintrc: '.jshintrc' }
     },
+
     uglify: {
       options: {banner: '<%= meta.banner %>'},
       build: {
-        files: {
-          '<%= dist %>/build/<%= meta.view.repoName %>.min.js': ['<%= meta.view.repoName %>.js']
-        }
+        expand: true,
+        cwd: 'dist',
+        src: ['*.js'],
+        ext: '.min.js',
+        dest: 'dist'
       }
     },
-    copy: {
+
+    ngmin: {
       main: {
-        files: [
-          {src: ['<%= meta.view.repoName %>.js'], dest: '<%= dist %>/build/<%= meta.view.repoName %>.js', filter: 'isFile'}
-        ]
-      },
-      template : {
-        options : {processContent : function(content){
-          return grunt.template.process(content);
-        }},
-        files: [
-          {src: ['<%= dist %>/.tmpl/index.tmpl'], dest: '<%= dist %>/index.html'},
-          {src: ['demo/demo.css'], dest: '<%= dist %>/assets/css/demo.css'}
-        ]
-          .concat(
-            _.map(js_dependencies.concat(css_dependencies), function (f) {
-              return {src: [f], dest: '<%= dist %>/' + f, filter: 'isFile'};
-          }))
+        expand: true,
+        cwd: 'src',
+        src: ['*.js'],
+        dest: 'dist'
       }
     },
+
     changelog: {
       options: {
         dest: 'CHANGELOG.md'
