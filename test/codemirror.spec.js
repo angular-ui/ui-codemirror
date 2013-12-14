@@ -71,8 +71,8 @@ describe('uiCodemirror', function () {
     it('should call the CodeMirror constructor with a function', function () {
       $compile('<div ui-codemirror></div>')(scope);
 
-      expect(CodeMirror.callCount).toEqual(1);
-      expect(CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
+      expect(window.CodeMirror.callCount).toEqual(1);
+      expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
 
       expect(codemirror).toBeDefined();
     });
@@ -80,8 +80,8 @@ describe('uiCodemirror', function () {
     it('should work as an element', function () {
       $compile('<ui-codemirror></ui-codemirror>')(scope);
 
-      expect(CodeMirror.callCount).toEqual(1);
-      expect(CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
+      expect(window.CodeMirror.callCount).toEqual(1);
+      expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
 
       expect(codemirror).toBeDefined();
     });
@@ -91,10 +91,10 @@ describe('uiCodemirror', function () {
       var element = $compile('<div><div ui-codemirror></div></div>')(scope).children();
 
       expect(element).toBeDefined();
-      expect(element.prop("tagName")).toBe("DIV");
-      expect(element.prop("classList").length).toEqual(2);
-      expect(element.prop("classList")[0]).toEqual("CodeMirror");
-      expect(element.prop("classList")[1]).toEqual("cm-s-default");
+      expect(element.prop('tagName')).toBe('DIV');
+      expect(element.prop('classList').length).toEqual(2);
+      expect(element.prop('classList')[0]).toEqual('CodeMirror');
+      expect(element.prop('classList')[1]).toEqual('cm-s-default');
     });
 
 
@@ -114,13 +114,13 @@ describe('uiCodemirror', function () {
 
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith("oof", "baar");
+        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
 
         $compile('<ui-codemirror ui-codemirror-opts="{oof: \'baar\'}"></ui-codemirror>')(scope);
 
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith("oof", "baar");
+        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
       });
 
       it('should include the default options', function () {
@@ -130,7 +130,7 @@ describe('uiCodemirror', function () {
 
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith("bar", "baz");
+        expect(codemirror.setOption).toHaveBeenCalledWith('bar', 'baz');
       });
 
       it('should extent the default options', function () {
@@ -140,8 +140,8 @@ describe('uiCodemirror', function () {
 
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(2);
-        expect(codemirror.setOption).toHaveBeenCalledWith("oof", "baar");
-        expect(codemirror.setOption).toHaveBeenCalledWith("bar", "baz");
+        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
+        expect(codemirror.setOption).toHaveBeenCalledWith('bar', 'baz');
       });
 
       it('should impact codemirror', function () {
@@ -150,10 +150,10 @@ describe('uiCodemirror', function () {
         $compile('<div ui-codemirror="{theme: \'baar\'}"></div>')(scope);
         expect(codemirror.setOption).toHaveBeenCalled();
         expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith("theme", "baar");
+        expect(codemirror.setOption).toHaveBeenCalledWith('theme', 'baar');
 
 
-        expect(codemirror.getOption("theme")).toEqual("baar");
+        expect(codemirror.getOption('theme')).toEqual('baar');
       });
     });
 
@@ -193,13 +193,13 @@ describe('uiCodemirror', function () {
       var element = $compile('<div><div ui-codemirror ng-model="foo"></div></div>')(scope).children();
 
       expect(element).toBeDefined();
-      expect(element.attr("class")).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
 
       var value = 'baz';
       codemirror.setValue(value);
       expect(scope.foo).toBe(value);
 
-      expect(element.attr("class")).toEqual('CodeMirror cm-s-default ng-valid ng-dirty');
+      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-valid ng-dirty');
 
     });
 
@@ -208,18 +208,18 @@ describe('uiCodemirror', function () {
       var element = $compile('<div><div ui-codemirror ng-model="foo"></div></div>')(scope).children();
 
       expect(element).toBeDefined();
-      expect(element.attr("class")).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
 
       scope.$apply('foo = "bar"');
       expect(codemirror.getValue()).toBe(scope.foo);
 
-      expect(element.attr("class")).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
     });
 
 
     it('when the IDE changes should use ngChange', function () {
       scope.change = angular.noop;
-      spyOn(scope, "change").andCallFake(function() { expect(scope.foo).toBe('baz'); });
+      spyOn(scope, 'change').andCallFake(function() { expect(scope.foo).toBe('baz'); });
 
       $compile('<div ui-codemirror ng-model="foo" ng-change="change()"></div>')(scope);
 
@@ -239,7 +239,7 @@ describe('uiCodemirror', function () {
 
     it('should runs the onLoad callback', function () {
       scope.codemirrorLoaded = angular.noop;
-      spyOn(scope, "codemirrorLoaded");
+      spyOn(scope, 'codemirrorLoaded');
 
       $compile('<div ui-codemirror="{onLoad: codemirrorLoaded}"></div>')(scope);
 

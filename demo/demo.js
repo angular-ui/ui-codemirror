@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective', 'ui.bootstrap', 'plunker' ])
   .controller('CodemirrorCtrl', ['$scope', function ($scope) {
 
@@ -14,7 +16,7 @@ angular.module('doc.ui-codeMirror', ['ui.codemirror', 'prettifyDirective', 'ui.b
 
         // HACK to have the codemirror instance in the scope...
         $scope.modeChanged = function () {
-          _cm.setOption("mode", $scope.mode.toLowerCase());
+          _cm.setOption('mode', $scope.mode.toLowerCase());
         };
 
       }
