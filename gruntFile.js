@@ -10,6 +10,25 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
   grunt.registerTask('build-doc', ['uglify', 'copy']);
 
+  // HACK TO ACCESS TO THE COMPONENT-PUBLISHER
+  function fakeTargetTask(prefix){
+    return function(){
+
+      if (this.args.length !== 1) return grunt.log.fail('Just give the name of the ' + prefix + ' you want like :\ngrunt ' + prefix + ':bower');
+
+      var done = this.async();
+      var spawn = require('child_process').spawn;
+      spawn('./node_modules/.bin/gulp', [ prefix, '--branch='+this.args[0] ].concat(grunt.option.flags()), {
+        cwd : './node_modules/component-publisher',
+        stdio: 'inherit'
+      }).on('close', done);
+    };
+  }
+
+  grunt.registerTask('build', fakeTargetTask('build'));
+  grunt.registerTask('publish', fakeTargetTask('publish'));
+  //
+
   var testConfig = function (configFile, customOptions) {
     var options = { configFile: configFile, singleRun: true };
     var travisOptions = process.env.TRAVIS && { browsers: [ 'Firefox', 'PhantomJS'], reporters: ['dots'] };
