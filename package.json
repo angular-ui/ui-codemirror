@@ -8,7 +8,7 @@
   "main": "./ui-codemirror.js",
   "dependencies": {},
   "devDependencies": {
-    "component-publisher": "douglasduteil/component-publisher",
+    "angular-ui-publisher": "~1.x",
     "grunt": "~0.4.2",
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
