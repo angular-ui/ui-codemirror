@@ -13,7 +13,7 @@ This directive allows you to add [CodeMirror](http://codemirror.net/) to your te
 You can get it from [Bower](http://bower.io/)
 
 ```sh
-bower install angular-ui-codemirror
+bower install angular-ui-codemirror\#bower
 ```
 
 This will copy the UI.Codemirror files into a `bower_components` folder, along with its dependencies. Load the script files in your application:
