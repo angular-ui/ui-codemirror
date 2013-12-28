@@ -17,7 +17,7 @@ module.exports = function(config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/codemirror/lib/codemirror.js',
-      'ui-codemirror.js',
+      'src/ui-codemirror.js',
       'test/*.spec.js'
     ],
 

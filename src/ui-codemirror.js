@@ -1,16 +1,17 @@
+'use strict';
+
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
 angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
   .directive('uiCodemirror', ['uiCodemirrorConfig', function (uiCodemirrorConfig) {
-    'use strict';
 
     return {
       restrict: 'EA',
       require: '?ngModel',
       priority: 1,
-      compile: function compile(tElement, tAttrs, transclude) {
+      compile: function compile(tElement) {
 
         // Require CodeMirror
         if (angular.isUndefined(window.CodeMirror)) {
@@ -22,11 +23,11 @@ angular.module('ui.codemirror', [])
         // - the initial content of the editor.
         //   see http://codemirror.net/doc/manual.html#api_constructor
         var value = tElement.text();
-        var codeMirror = new CodeMirror(function (cm_el) {
+        var codeMirror = new window.CodeMirror(function (cm_el) {
 
-          angular.forEach(tElement.prop("attributes"), function (a) {
-            if (a.name === "ui-codemirror") {
-              cm_el.setAttribute("ui-codemirror-opts", a.textContent);
+          angular.forEach(tElement.prop('attributes'), function (a) {
+            if (a.name === 'ui-codemirror') {
+              cm_el.setAttribute('ui-codemirror-opts', a.textContent);
             } else {
               cm_el.setAttribute(a.name, a.textContent);
             }
@@ -34,7 +35,7 @@ angular.module('ui.codemirror', [])
 
           // FIX replaceWith throw not parent Error !
           if (tElement.parent().length <= 0) {
-            tElement.wrap("<div>");
+            tElement.wrap('<div>');
           }
 
           tElement.replaceWith(cm_el);
@@ -42,7 +43,7 @@ angular.module('ui.codemirror', [])
 
         return  function postLink(scope, iElement, iAttrs, ngModel) {
 
-          var options, opts, onChange;
+          var options, opts;
 
           options = uiCodemirrorConfig.codemirror || {};
           opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
@@ -61,7 +62,7 @@ angular.module('ui.codemirror', [])
             scope.$watch(iAttrs.uiCodemirror, updateOptions, true);
           }
           // Specialize change event
-          codeMirror.on("change", function (instance, changeObj) {
+          codeMirror.on('change', function (instance) {
             var newValue = instance.getValue();
             if (ngModel && newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
