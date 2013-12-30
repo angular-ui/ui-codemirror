@@ -7,8 +7,8 @@
 
   <!-- Le css -->
   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"/>
-  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
   <link rel="stylesheet" type="text/css" href="assets/css/prettify.css"/>
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
 
       <link rel="stylesheet" type="text/css" href="vendor/codemirror.css"/>
     <link rel="stylesheet" type="text/css" href="vendor/twilight.css"/>
@@ -20,78 +20,81 @@
 
 <!-- Le navbar
 ================================================== -->
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <div class="dropdown pull-left">
-        <a class="brand dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-          UI.CodeMirror
-          <b class="caret"></b>
-        </a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-          <li><a href="https://github.com/angular-ui/"><strong>Related Projects:</strong></a></li>
-          <li class="divider"></li>
-          <li><a href="http://angular-ui.github.io/">AngularUI</a></li>
-          <li><a href="http://angular-ui.github.io/bootstrap/">UI Bootstrap</a></li>
-          <li><a href="http://angular-ui.github.io/ng-grid/">Grid</a></li>
-          <li><a href="https://github.com/angular-ui/AngularJs.tmbundle">AngularJS.tmbundle</a></li>
-          <li><a href="http://angular-ui.github.io/ui-router/sample/">Router</a></li>
-        </ul>
+      <div class="navbar-header">
       </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="" class="navbar-brand">UI.CodeMirror</a>
+        </li>
+        <li class="pull-right">
+          <a href="http://angular-ui.github.io">by AngularUI</a>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
-<div style="margin: 20px;"></div>
 
 <!-- Le header
 ================================================== -->
-<header class="hero-unit" id="overview">
+<header class="bs-header">
   <div class="container">
 
     <h1>UI.CodeMirror</h1>
 
     <p>This directive allows you to add CodeMirror to your textarea elements.</p>
 
-    <p class="btn-group">
-      <a class="btn" href="https://github.com/angular-ui/ui-codemirror"><i
-        class="icon-github"></i> Code on Github</a>
-      <a class="btn btn-primary" href="https://github.com/angular-ui/ui-codemirror/tree/gh-pages/build">
-        <i class="icon-download-alt icon-white"></i> Download
-        <small>(0.1.0)</small>
-      </a>
+    <p>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-codemirror">Code on Github</a>
+      <a class="btn btn-outline-inverse btn-lg" href="https://github.com/angular-ui/ui-codemirror/releases/tag/v0.1.0">
+        <i class="glyphicon glyphicon-download-alt"></i> Download <small>(0.1.0)</small>
+     </a>
     </p>
   </div>
-  <div class="bs-docs-social">
-    <div class="container">
-      <ul class="bs-docs-social-buttons">
-        <li>
-          <iframe
+  <div class="bs-social container">
+      <ul class="bs-social-buttons list-inline list-unstyled">
+          <li>
+              <iframe
             src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-codemirror&amp;type=watch&amp;count=true"
             allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-        </li>
-        <li>
-          <iframe
+          </li>
+          <li>
+             <iframe
             src="http://ghbtns.com/github-btn.html?user=angular-ui&amp;repo=ui-codemirror&amp;type=fork&amp;count=true"
             allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
-        </li>
-        <li>
-          <!-- Place this tag where you want the +1 button to render. -->
-          <div class="g-plusone" data-size="medium"></div>
+          </li>
+          <li>
+              <a href="https://twitter.com/share" class="twitter-share-button"
+                 data-hashtags="angularjs">Tweet</a>
+              <script>!function (d, s, id) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  if (!d.getElementById(id)) {
+                      js = d.createElement(s);
+                      js.id = id;
+                      js.src = "//platform.twitter.com/widgets.js";
+                      fjs.parentNode.insertBefore(js, fjs);
+                  }
+              }(document, "script", "twitter-wjs");</script>
+          </li>
+          <li>
+              <!-- Place this tag where you want the +1 button to render. -->
+              <div class="g-plusone" data-size="medium"></div>
 
-          <!-- Place this tag after the last +1 button tag. -->
-          <script type="text/javascript">
-            (function () {
-              var po = document.createElement('script');
-              po.type = 'text/javascript';
-              po.async = true;
-              po.src = 'https://apis.google.com/js/plusone.js';
-              var s = document.getElementsByTagName('script')[0];
-              s.parentNode.insertBefore(po, s);
-            })();
-          </script>
-        </li>
+              <!-- Place this tag after the last +1 button tag. -->
+              <script type="text/javascript">
+                  (function () {
+                      var po = document.createElement('script');
+                      po.type = 'text/javascript';
+                      po.async = true;
+                      po.src = 'https://apis.google.com/js/plusone.js';
+                      var s = document.getElementsByTagName('script')[0];
+                      s.parentNode.insertBefore(po, s);
+                  })();
+              </script>
+          </li>
       </ul>
-    </div>
   </div>
 </header>
 
@@ -101,43 +104,38 @@
 
   <section id="codemirror" ng-app="doc.ui-codeMirror">
 
-
 <!-- =Minimal code
 --------------------------------------------------------------------------- -->
-<div id="demo-mini" class="row">
-  <div class="span12">
-    <div class="page-header">
-      <h1>Minimal code</h1>
+<div id="demo-mini">
+  <div class="page-header">
+    <h1>Minimal code</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div ui-codemirror>Code mirror here</div>
     </div>
-    <div class="row">
-      <div class="span6">
-        <div ui-codemirror>Code mirror here</div>
-      </div>
 
-      <div class="span6" ng-controller="PlunkerCtrl"
-           ng-init="
+    <div class="col-md-6" ng-controller="PlunkerCtrl"
+         ng-init="
 vendor_css=['http://codemirror.net/lib/codemirror.css'];
 vendor_js=['http://codemirror.net/lib/codemirror.js'];
-        "
-          >
-        <div class="pull-right">
-          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
-            <i class="icon-edit icon-white"></i> Edit in plunker
-          </button>
-        </div>
-
-        <tabset>
-          <tab heading="Markup">
-            <div plunker-content="markup">
-<pre class="prettyprint">&lt;section&gt;
-
-  &lt;div ui-codemirror &gt;Code mirror here&lt;/div&gt;
-
-&lt;/section&gt;</pre>
-            </div>
-          </tab>
-        </tabset>
+      "
+        >
+      <div class="pull-right">
+        <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Codemirror', 'ui-codemirror')">
+          <i class="glyphicon glyphicon-edit"></i> Edit in plunker
+        </button>
       </div>
+
+      <tabset>
+        <tab heading="Markup">
+          <div plunker-content="markup">
+<pre class="prettyprint">&lt;section&gt;
+  &lt;div ui-codemirror &gt;Code mirror here&lt;/div&gt;
+&lt;/section&gt;</pre>
+          </div>
+        </tab>
+      </tabset>
     </div>
   </div>
 </div>
@@ -145,20 +143,19 @@ vendor_js=['http://codemirror.net/lib/codemirror.js'];
 
 <!-- =General options demo
 --------------------------------------------------------------------------- -->
-<div id="demo-general" class="row">
-  <div class="span12">
-    <div class="page-header">
-      <h1>General options</h1>
-    </div>
-    <div class="row">
-      <div class="span6">
-        <div ui-codemirror="{
-              lineNumbers: true,
-              theme:'twilight',
-              readOnly: 'nocursor',
-              lineWrapping : true,
-              mode: 'xml'
-            }">&lt;html style=&quot;color: green&quot;&gt;
+<div id="demo-general">
+  <div class="page-header">
+    <h1>General options</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div ui-codemirror="{
+            lineNumbers: true,
+            theme:'twilight',
+            readOnly: 'nocursor',
+            lineWrapping : true,
+            mode: 'xml'
+          }">&lt;html style=&quot;color: green&quot;&gt;
 &lt;!-- this is a comment --&gt;
 &lt;head&gt;
 &lt;title&gt;HTML Example&lt;/title&gt;
@@ -168,23 +165,23 @@ The indentation tries to be &lt;em&gt;somewhat &amp;quot;do what
 I mean&amp;quot;&lt;/em&gt;... but might not match your style.
 &lt;/body&gt;
 &lt;/html&gt;</div>
-      </div>
+    </div>
 
-      <div class="span6" ng-controller="PlunkerCtrl"
-           ng-init="
+    <div class="col-md-6" ng-controller="PlunkerCtrl"
+         ng-init="
 vendor_css=['http://codemirror.net/lib/codemirror.css', 'http://codemirror.net/theme/twilight.css'];
 vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mode/xml/xml.js'];
-        "
-          >
-        <div class="pull-right">
-          <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
-            <i class="icon-edit icon-white"></i> Edit in plunker
-          </button>
-        </div>
+      "
+        >
+      <div class="pull-right">
+        <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Codemirror', 'ui-codemirror')">
+          <i class="glyphicon glyphicon-edit"></i> Edit in plunker
+        </button>
+      </div>
 
-        <tabset>
-          <tab heading="Markup">
-            <div plunker-content="markup">
+      <tabset>
+        <tab heading="Markup">
+          <div plunker-content="markup">
 <pre class="prettyprint">&lt;section&gt;
   &lt;div ui-codemirror=&quot;{
       lineNumbers: true,
@@ -202,26 +199,28 @@ The indentation tries to be &amp;lt;em&amp;gt;somewhat &amp;amp;quot;do what
 I mean&amp;amp;quot;&amp;lt;/em&amp;gt;... but might not match your style.
 &amp;lt;/body&amp;gt;
 &amp;lt;/html&amp;gt;&lt;/div&gt;
-
 &lt;/section&gt;</pre>
             </div>
           </tab>
         </tabset>
       </div>
     </div>
-  </div>
 </div>
 
 
 <!-- =Mode-Changing demo
 --------------------------------------------------------------------------- -->
-<div id="demo-mode-changing" class="row">
-  <div class="span12" ng-controller="CodemirrorCtrl">
+<div id="demo-mode-changing">
     <div class="page-header">
       <h1>Mode-Changing demo</h1>
     </div>
-    <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
-    Mode : <select ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+  <div class="row" ng-controller="CodemirrorCtrl">
+    <div class="col-md-12">
+      <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+    </div>
+    <div class="col-md-6">
+      Mode : <select class="form-control" ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>
+    </div>
   </div>
 </div>
 
@@ -236,8 +235,8 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
         "
       >
     <div class="pull-right">
-      <button class="btn btn-info" ng-click="edit('1.0.7', 'UI.Codemirror', 'ui-codemirror')">
-        <i class="icon-edit icon-white"></i> Edit in plunker
+      <button class="btn btn-info" ng-click="edit('1.2.6', 'UI.Codemirror', 'ui-codemirror')">
+        <i class="glyphicon glyphicon-edit"></i> Edit in plunker
       </button>
     </div>
 
@@ -251,6 +250,8 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
   Mode : &lt;select ng-model=&quot;mode&quot; ng-options=&quot;m for m in modes&quot; ng-change=&quot;modeChanged()&quot;&gt;&lt;/select&gt;
 
 &lt;/section&gt;</pre>
+
+    <div style="margin-top: 450px;"></div>
         </div>
       </tab>
       <tab heading="JavaScript">
@@ -299,22 +300,18 @@ vendor_js=['http://codemirror.net/lib/codemirror.js', 'http://codemirror.net/mod
 
 <!-- Le javascript
 ================================================== -->
-
-<script src="assets/vendor/jquery.min.js"></script>
-<script src="assets/vendor/bootstrap.min.js"></script>
-
 <script src="assets/vendor/prettify.js"></script>
 
 <script src="assets/vendor/angular.min.js"></script>
+<script src="assets/vendor/ui-bootstrap-tpls.min.js"></script>
 <script src="core/prettifyDirective.js"></script>
 <script src="core/plunker.js"></script>
 
-<script src="vendor/ui-bootstrap-tpls.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="vendor/codemirror.js" type="text/javascript" charset="utf-8"></script>
-<script src="vendor/scheme.js" type="text/javascript" charset="utf-8"></script>
-<script src="vendor/javascript.js" type="text/javascript" charset="utf-8"></script>
-<script src="vendor/xml.js" type="text/javascript" charset="utf-8"></script>
-<script src="dist/ui-codemirror.js" type="text/javascript" charset="utf-8"></script>
+<script src="vendor/codemirror.js"></script>
+<script src="vendor/scheme.js"></script>
+<script src="vendor/javascript.js"></script>
+<script src="vendor/xml.js"></script>
+<script src="dist/ui-codemirror.js"></script>
 
 
 <script>
