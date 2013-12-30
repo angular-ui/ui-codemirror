@@ -60,6 +60,10 @@ module.exports = function (grunt) {
       demo: {
         files: ['demo/*', 'publish.js'],
         tasks: ['jshint', 'build:gh-pages']
+      },
+      livereload: {
+        files: ['out/built/gh-pages/**/*'],
+        options: { livereload: true }
       }
     },
 
@@ -72,10 +76,8 @@ module.exports = function (grunt) {
     connect: {
       options: {
         base : 'out/built/gh-pages',
-        port: grunt.option('port') || '8000',
-        hostname: grunt.option('host') || 'localhost',
-        open: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>',
-        livereload: grunt.option('port') || '8000'
+        open: true,
+        livereload: true
       },
       server: { options: { keepalive: true } },
       continuous: { options: { keepalive: false } }
