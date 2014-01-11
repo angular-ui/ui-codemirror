@@ -67,7 +67,7 @@ angular.module('ui.codemirror', [])
             if (ngModel && newValue !== ngModel.$viewValue) {
               ngModel.$setViewValue(newValue);
             }
-            if (!scope.$$phase) {
+            if (!scope.$root.$$phase) {
               scope.$apply();
             }
           });
