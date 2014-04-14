@@ -247,6 +247,17 @@ describe('uiCodemirror', function () {
       expect(scope.codemirrorLoaded).toHaveBeenCalledWith(codemirror);
     });
 
+    it('responds to the $broadcast event "CodeMirror"', function () {
+      var broadcast = { callback: angular.noop };
+      spyOn(broadcast, 'callback');
+
+      $compile('<div ui-codemirror></div>')(scope);
+      scope.$broadcast('CodeMirror', broadcast.callback);
+
+      expect(broadcast.callback).toHaveBeenCalled();
+      expect(broadcast.callback).toHaveBeenCalledWith(codemirror);
+    });
+
 
     it('should watch the options', function () {
       spyOn(scope, '$watch').andCallThrough();
