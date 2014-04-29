@@ -61,16 +61,6 @@ angular.module('ui.codemirror', [])
           if (angular.isDefined(scope.$eval(iAttrs.uiCodemirror))) {
             scope.$watch(iAttrs.uiCodemirror, updateOptions, true);
           }
-          // Specialize change event
-          codeMirror.on('change', function (instance) {
-            var newValue = instance.getValue();
-            if (ngModel && newValue !== ngModel.$viewValue) {
-              ngModel.$setViewValue(newValue);
-            }
-            if (!scope.$$phase) {
-              scope.$apply();
-            }
-          });
 
 
           if (ngModel) {
@@ -95,6 +85,18 @@ angular.module('ui.codemirror', [])
               var safeViewValue = ngModel.$viewValue || '';
               codeMirror.setValue(safeViewValue);
             };
+
+
+            // Keep the ngModel in sync with changes from CodeMirror
+            codeMirror.on('change', function (instance) {
+              var newValue = instance.getValue();
+              if (newValue !== ngModel.$viewValue) {
+                // Changes to the model from a callback need to be wrapped in $apply or angular will not notice them
+                scope.$apply(function() {
+                  ngModel.$setViewValue(newValue);
+                });
+              }
+            });
           }
 
 
