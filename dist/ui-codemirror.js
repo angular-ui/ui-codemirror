@@ -87,6 +87,15 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
               }
             });
           }
+          // Allow access to the CodeMirror instance through a broadcasted event
+          // eg: $broadcast('CodeMirror', function(cm){...});
+          scope.$on('CodeMirror', function (event, callback) {
+            if (angular.isFunction(callback)) {
+              callback(codeMirror);
+            } else {
+              throw new Error('the CodeMirror event requires a callback function');
+            }
+          });
           // onLoad callback
           if (angular.isFunction(opts.onLoad)) {
             opts.onLoad(codeMirror);
