@@ -23,25 +23,26 @@ angular.module('ui.codemirror', [])
         // - the initial content of the editor.
         //   see http://codemirror.net/doc/manual.html#api_constructor
         var value = tElement.text();
-        var codeMirror = new window.CodeMirror(function (cm_el) {
 
-          angular.forEach(tElement.prop('attributes'), function (a) {
+        return  function postLink(scope, iElement, iAttrs, ngModel) {
+          
+          var codeMirror = new window.CodeMirror(function (cm_el) {
+
+          angular.forEach(iElement.prop('attributes'), function (a) {
             if (a.name === 'ui-codemirror') {
               cm_el.setAttribute('ui-codemirror-opts', a.textContent);
-            } else {
+            } else if (a.name !== 'class') {
               cm_el.setAttribute(a.name, a.textContent);
             }
           });
 
           // FIX replaceWith throw not parent Error !
-          if (tElement.parent().length <= 0) {
-            tElement.wrap('<div>');
+          if (iElement.parent().length <= 0) {
+            iElement.wrap('<div>');
           }
 
-          tElement.replaceWith(cm_el);
+          iElement.replaceWith(cm_el);
         }, {value: value});
-
-        return  function postLink(scope, iElement, iAttrs, ngModel) {
 
           var options, opts;
 
