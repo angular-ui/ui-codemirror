@@ -87,7 +87,7 @@ describe('uiCodemirror', function () {
     });
 
     it('should replace the element with a div.CodeMirror', function () {
-      // Explicit a parent node to support the scope.
+      // Explicit a parent node to support the directive.
       var element = $compile('<div><div ui-codemirror></div></div>')(scope).children();
 
       expect(element).toBeDefined();
@@ -189,31 +189,29 @@ describe('uiCodemirror', function () {
 
 
     it('when the IDE changes should update the model', function () {
-      // Explicit a parent node to support the scope.
-      var element = $compile('<div><div ui-codemirror ng-model="foo"></div></div>')(scope).children();
+      var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
 
       var value = 'baz';
       codemirror.setValue(value);
       expect(scope.foo).toBe(value);
 
-      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-valid ng-dirty');
+      expect(element.attr('class')).toEqual('ng-scope ng-valid ng-dirty');
 
     });
 
     it('when the model changes should update the IDE', function () {
-      // Explicit a parent node to support the scope.
-      var element = $compile('<div><div ui-codemirror ng-model="foo"></div></div>')(scope).children();
+      var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
 
       scope.$apply('foo = "bar"');
       expect(codemirror.getValue()).toBe(scope.foo);
 
-      expect(element.attr('class')).toEqual('CodeMirror cm-s-default ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
     });
 
 
