@@ -9,32 +9,22 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
       restrict: 'EA',
       require: '?ngModel',
       priority: 1,
-      compile: function compile(tElement) {
+      compile: function compile() {
         // Require CodeMirror
         if (angular.isUndefined(window.CodeMirror)) {
           throw new Error('ui-codemirror need CodeMirror to work... (o rly?)');
         }
-        // Create a codemirror instance with
-        // - the function that will to place the editor into the document.
-        // - the initial content of the editor.
-        //   see http://codemirror.net/doc/manual.html#api_constructor
-        var value = tElement.text();
-        var codeMirror = new window.CodeMirror(function (cm_el) {
-            angular.forEach(tElement.prop('attributes'), function (a) {
-              if (a.name === 'ui-codemirror') {
-                cm_el.setAttribute('ui-codemirror-opts', a.textContent);
-              } else {
-                cm_el.setAttribute(a.name, a.textContent);
-              }
-            });
-            // FIX replaceWith throw not parent Error !
-            if (tElement.parent().length <= 0) {
-              tElement.wrap('<div>');
-            }
-            tElement.replaceWith(cm_el);
-          }, { value: value });
         return function postLink(scope, iElement, iAttrs, ngModel) {
-          var options, opts;
+          var options, opts, codeMirror, value;
+          value = iElement.text();
+          if (iElement[0].tagName === 'TEXTAREA') {
+            codeMirror = window.CodeMirror.fromTextArea(iElement[0], { value: value });
+          } else {
+            iElement.html('');
+            codeMirror = new window.CodeMirror(function (cm_el) {
+              iElement.replaceWith(cm_el);
+            }, { value: value });
+          }
           options = uiCodemirrorConfig.codemirror || {};
           opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
           function updateOptions(newValues) {
@@ -45,7 +35,7 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
             }
           }
           updateOptions(opts);
-          if (angular.isDefined(scope.$eval(iAttrs.uiCodemirror))) {
+          if (iAttrs.uiCodemirror) {
             scope.$watch(iAttrs.uiCodemirror, updateOptions, true);
           }
           if (ngModel) {
