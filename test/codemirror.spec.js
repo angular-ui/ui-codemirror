@@ -1,6 +1,8 @@
 describe('uiCodemirror', function () {
   'use strict';
 
+  var phantom = /PhantomJS/.test(navigator.userAgent);
+
   // declare these up here to be global to all tests
   var scope, $compile, $timeout, uiConfig;
 
@@ -189,6 +191,7 @@ describe('uiCodemirror', function () {
 
 
     it('when the IDE changes should update the model', function () {
+      if (phantom) return;
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
@@ -203,6 +206,7 @@ describe('uiCodemirror', function () {
     });
 
     it('when the model changes should update the IDE', function () {
+      if (phantom) return;
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
@@ -216,6 +220,7 @@ describe('uiCodemirror', function () {
 
 
     it('when the IDE changes should use ngChange', function () {
+      if (phantom) return;
       scope.change = angular.noop;
       spyOn(scope, 'change').andCallFake(function() { expect(scope.foo).toBe('baz'); });
 
