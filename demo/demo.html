@@ -112,7 +112,7 @@ I mean&amp;amp;quot;&amp;lt;/em&amp;gt;... but might not match your style.
     </div>
   <div class="row" ng-controller="CodemirrorCtrl">
     <div class="col-md-12">
-      <textarea ui-codemirror="cmOption" ng-model="cmModel"></textarea>
+      <div ui-codemirror="cmOption" ng-model="cmModel"></div>
     </div>
     <div class="col-md-6">
       Mode : <select class="form-control" ng-model="mode" ng-options="m for m in modes" ng-change="modeChanged()"></select>

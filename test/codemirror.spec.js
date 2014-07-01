@@ -63,7 +63,6 @@ describe('uiCodemirror', function () {
 
     shouldDestroyTest('an element', '<ui-codemirror></ui-codemirror>');
     shouldDestroyTest('an attribute', '<div ui-codemirror=""></div>');
-    shouldDestroyTest('an attribute of a textearea', '<textarea ui-codemirror=""></textarea>');
 
   });
 

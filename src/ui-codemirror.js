@@ -26,9 +26,10 @@ angular.module('ui.codemirror', [])
           value = iElement.text();
 
           if (iElement[0].tagName === 'TEXTAREA') {
-            codeMirror = window.CodeMirror.fromTextArea(iElement[0], {
-              value: value
-            });
+            throw new Error('NOPE');
+//            codeMirror = window.CodeMirror.fromTextArea(iElement[0], {
+//              value: value
+//            });
           } else {
             iElement.html('');
             codeMirror = new window.CodeMirror(function(cm_el) {
