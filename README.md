@@ -35,8 +35,9 @@ Finally, add the directive to your html,
 as attribute :
 
 ```html
-<textarea ui-codemirror></textarea>
-// or
+// Not well supported yet
+// <textarea ui-codemirror></textarea> 
+
 <div ui-codemirror></div>
 ```
 
@@ -64,8 +65,6 @@ myAppModule.controller('MyController', [ '$scope', function($scope) {
 If you update this variable with the new values, they will be merged and the ui will be updated.
 
 ```xml
-<textarea ui-codemirror="editorOptions" ng-model="x"></textarea>
-// or
 <ui-codemirror ui-codemirror-opts="editorOptions"></ui-codemirror>
 ```
 
@@ -84,7 +83,7 @@ If you apply the refresh directive to element then any change to do this scope v
 _The ui-refresh directive expects a scope variable that can be any thing...._
 
 ```html
-<textarea ui-codemirror ng-model="x" ui-refresh='isSomething'></textarea>
+<div ui-codemirror ng-model="x" ui-refresh='isSomething'></div>
 ```
 
 Now you can set the _isSomething_ in the controller scope.
