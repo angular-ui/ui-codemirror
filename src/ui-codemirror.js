@@ -32,7 +32,7 @@ angular.module('ui.codemirror', [])
           } else {
             iElement.html('');
             codeMirror = new window.CodeMirror(function(cm_el) {
-              iElement.replaceWith(cm_el);
+              iElement.append(cm_el);
             }, {
               value: value
             });
@@ -105,7 +105,7 @@ angular.module('ui.codemirror', [])
 
           // Allow access to the CodeMirror instance through a broadcasted event
           // eg: $broadcast('CodeMirror', function(cm){...});
-          scope.$on('CodeMirror', function(event, callback){
+          scope.$on('CodeMirror', function(event, callback) {
             if (angular.isFunction(callback)) {
               callback(codeMirror);
             } else {

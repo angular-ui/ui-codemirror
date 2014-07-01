@@ -4,18 +4,17 @@ describe('uiCodemirror', function () {
   // declare these up here to be global to all tests
   var scope, $compile, $timeout, uiConfig;
 
-  beforeEach(module('ui.codemirror'));
-  beforeEach(inject(function (uiCodemirrorConfig) {
-    uiConfig = uiCodemirrorConfig;
-  }));
+  beforeEach(function(){
+    module('ui.codemirror');
 
-  // inject in angular constructs. Injector knows about leading/trailing underscores and does the right thing
-  // otherwise, you would need to inject these into each test
-  beforeEach(inject(function (_$rootScope_, _$compile_, _$timeout_) {
-    scope = _$rootScope_.$new();
-    $compile = _$compile_;
-    $timeout = _$timeout_;
-  }));
+    inject(function (_$rootScope_, _$compile_, _$timeout_, uiCodemirrorConfig) {
+      scope = _$rootScope_.$new();
+      $compile = _$compile_;
+      $timeout = _$timeout_;
+      uiConfig = uiCodemirrorConfig;
+    });
+
+  });
 
   afterEach(function () {
     uiConfig = {};
@@ -33,6 +32,50 @@ describe('uiCodemirror', function () {
     expect(compile).toThrow(new Error('ui-codemirror need CodeMirror to work... (o rly?)'));
     window.CodeMirror = _CodeMirror;
   });
+
+  describe('destruction', function () {
+
+    var parentElement;
+
+    beforeEach(function () {
+      parentElement = angular.element('<div></div>');
+      angular.element(document.body).prepend(parentElement);
+    });
+
+    afterEach(function () {
+      parentElement.remove();
+    });
+
+    function shouldDestroyTest(elementType, template) {
+      it('should destroy the directive of ' + elementType, function () {
+        var element = angular.element(template);
+        parentElement.append(element);
+
+        $compile(element)(scope);
+        scope.$digest();
+
+        expect(parentElement.children().length).toBe(1);
+        element.remove();
+        scope.$digest();
+        expect(parentElement.children().length).toBe(0);
+      });
+    }
+
+    shouldDestroyTest('an element', '<ui-codemirror></ui-codemirror>');
+    shouldDestroyTest('an attribute', '<div ui-codemirror=""></div>');
+    shouldDestroyTest('an attribute of a textearea', '<textarea ui-codemirror=""></textarea>');
+
+  });
+
+  it('should not throw an error when window.CodeMirror is defined', function () {
+    function compile() {
+      $compile('<div ui-codemirror></div>')(scope);
+    }
+
+    expect(window.CodeMirror).toBeDefined();
+    expect(compile).not.toThrow();
+  });
+
 
   it('should not throw an error when window.CodeMirror is defined', function () {
     function compile() {
@@ -86,9 +129,9 @@ describe('uiCodemirror', function () {
       expect(codemirror).toBeDefined();
     });
 
-    it('should replace the element with a div.CodeMirror', function () {
+    it('should have a child element with a div.CodeMirror', function () {
       // Explicit a parent node to support the directive.
-      var element = $compile('<div><div ui-codemirror></div></div>')(scope).children();
+      var element = $compile('<div ui-codemirror></div>')(scope).children();
 
       expect(element).toBeDefined();
       expect(element.prop('tagName')).toBe('DIV');
