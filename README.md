@@ -5,7 +5,7 @@ This directive allows you to add [CodeMirror](http://codemirror.net/) to your te
 ## Requirements
 
 - AngularJS
-- [CodeMirror 3.x](https://github.com/marijnh/CodeMirror)
+- [CodeMirror 3.x|4.x](https://github.com/marijnh/CodeMirror)
 
 
 ## Usage
