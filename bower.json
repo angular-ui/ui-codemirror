@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "angular": "^1",
-    "codemirror": "^3"
+    "codemirror": "3 || 4"
   },
   "devDependencies": {
     "angular-mocks": "^1"
