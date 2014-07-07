@@ -18,9 +18,8 @@ angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive
           var options, opts, codeMirror, value;
           value = iElement.text();
           if (iElement[0].tagName === 'TEXTAREA') {
-            throw new Error('NOPE');  //            codeMirror = window.CodeMirror.fromTextArea(iElement[0], {
-                                      //              value: value
-                                      //            });
+            // Might bug but still ...
+            codeMirror = window.CodeMirror.fromTextArea(iElement[0], { value: value });
           } else {
             iElement.html('');
             codeMirror = new window.CodeMirror(function (cm_el) {
