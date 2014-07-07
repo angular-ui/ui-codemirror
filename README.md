@@ -35,8 +35,8 @@ Finally, add the directive to your html,
 as attribute :
 
 ```html
-// Not well supported yet
-// <textarea ui-codemirror></textarea> 
+// Not well supported yet but still... We need feedbacks to improve it...
+<textarea ui-codemirror></textarea>
 
 <div ui-codemirror></div>
 ```
