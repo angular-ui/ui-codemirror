@@ -5,6 +5,7 @@ describe('uiCodemirror', function () {
 
   // declare these up here to be global to all tests
   var scope, $compile, $timeout, uiConfig;
+  var codemirrorDefaults = window.CodeMirror.defaults;
 
   beforeEach(function(){
     module('ui.codemirror');
@@ -104,11 +105,13 @@ describe('uiCodemirror', function () {
 
     beforeEach(function () {
       var _constructor = window.CodeMirror;
-      spyOn(window, 'CodeMirror').andCallFake(function () {
+      window.CodeMirror = jasmine.createSpy('window.CodeMirror').andCallFake(function () {
         codemirror = _constructor.apply(this, arguments);
         spies(codemirror);
         return codemirror;
       });
+
+      window.CodeMirror.defaults = codemirrorDefaults;
     });
 
 
@@ -142,60 +145,57 @@ describe('uiCodemirror', function () {
     });
 
 
-    describe('setOptions', function () {
+    describe('options', function () {
 
       spies = function (codemirror) {
-        spyOn(codemirror, 'setOption').andCallThrough();
+        codemirror._setOption = codemirror._setOption || codemirror.setOption;
+        codemirror.setOption = jasmine.createSpy('codemirror.setOption').andCallFake(function () {
+          codemirror._setOption.apply(this, arguments);
+        });
       };
 
       it('should not be called', function () {
         $compile('<div ui-codemirror></div>')(scope);
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), codemirrorDefaults);
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should include the passed options', function () {
+      it('should include the passed options (attribute directive)', function () {
         $compile('<div ui-codemirror="{oof: \'baar\'}"></div>')(scope);
 
-        expect(codemirror.setOption).toHaveBeenCalled();
-        expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' }));
+        expect(codemirror.setOption).not.toHaveBeenCalled();
+      });
 
+      it('should include the passed options (element directive)', function () {
         $compile('<ui-codemirror ui-codemirror-opts="{oof: \'baar\'}"></ui-codemirror>')(scope);
 
-        expect(codemirror.setOption).toHaveBeenCalled();
-        expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' }));
+        expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
       it('should include the default options', function () {
-        $compile('<div ui-codemirror>')(scope);
         uiConfig.codemirror = {bar: 'baz'};
         $compile('<div ui-codemirror></div>')(scope);
 
-        expect(codemirror.setOption).toHaveBeenCalled();
-        expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith('bar', 'baz');
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { bar: 'baz' }));
+        expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
       it('should extent the default options', function () {
-        $compile('<div ui-codemirror>')(scope);
         uiConfig.codemirror = {bar: 'baz'};
         $compile('<div ui-codemirror="{oof: \'baar\'}"></div>')(scope);
 
-        expect(codemirror.setOption).toHaveBeenCalled();
-        expect(codemirror.setOption.calls.length).toEqual(2);
-        expect(codemirror.setOption).toHaveBeenCalledWith('oof', 'baar');
-        expect(codemirror.setOption).toHaveBeenCalledWith('bar', 'baz');
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' , bar: 'baz' }));
+        expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
       it('should impact codemirror', function () {
-        $compile('<div ui-codemirror>')(scope);
         uiConfig.codemirror = {};
         $compile('<div ui-codemirror="{theme: \'baar\'}"></div>')(scope);
-        expect(codemirror.setOption).toHaveBeenCalled();
-        expect(codemirror.setOption.calls.length).toEqual(1);
-        expect(codemirror.setOption).toHaveBeenCalledWith('theme', 'baar');
 
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { theme: 'baar' }));
+        expect(codemirror.setOption).not.toHaveBeenCalled();
 
         expect(codemirror.getOption('theme')).toEqual('baar');
       });
@@ -283,8 +283,7 @@ describe('uiCodemirror', function () {
     });
 
     it('should runs the onLoad callback', function () {
-      scope.codemirrorLoaded = angular.noop;
-      spyOn(scope, 'codemirrorLoaded');
+      scope.codemirrorLoaded = jasmine.createSpy('scope.codemirrorLoaded');
 
       $compile('<div ui-codemirror="{onLoad: codemirrorLoaded}"></div>')(scope);
 
@@ -293,8 +292,8 @@ describe('uiCodemirror', function () {
     });
 
     it('responds to the $broadcast event "CodeMirror"', function () {
-      var broadcast = { callback: angular.noop };
-      spyOn(broadcast, 'callback');
+      var broadcast = { };
+      broadcast.callback = jasmine.createSpy('broadcast.callback');
 
       $compile('<div ui-codemirror></div>')(scope);
       scope.$broadcast('CodeMirror', broadcast.callback);
@@ -305,13 +304,11 @@ describe('uiCodemirror', function () {
 
 
     it('should watch the options', function () {
-      spyOn(scope, '$watch').andCallThrough();
 
       scope.cmOption = { readOnly: true };
       $compile('<div ui-codemirror="cmOption"></div>')(scope);
+      scope.$digest();
 
-      expect(scope.$watch.callCount).toEqual(1); // the uiCodemirror option
-      expect(scope.$watch).toHaveBeenCalledWith('cmOption', jasmine.any(Function), true);
       expect(codemirror.getOption('readOnly')).toBeTruthy();
 
       scope.cmOption.readOnly = false;
@@ -320,14 +317,12 @@ describe('uiCodemirror', function () {
     });
 
     it('should watch the options (object property)', function () {
-      spyOn(scope, '$watch').andCallThrough();
 
       scope.cm = {};
       scope.cm.option = { readOnly: true };
       $compile('<div ui-codemirror="cm.option"></div>')(scope);
+      scope.$digest();
 
-      expect(scope.$watch.callCount).toEqual(1); // the uiCodemirror option
-      expect(scope.$watch).toHaveBeenCalledWith('cm.option', jasmine.any(Function), true);
       expect(codemirror.getOption('readOnly')).toBeTruthy();
 
       scope.cm.option.readOnly = false;

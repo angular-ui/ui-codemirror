@@ -21,41 +21,33 @@ angular.module('ui.codemirror', [])
         return function postLink(scope, iElement, iAttrs, ngModel) {
 
 
-          var options, opts, codeMirror, value;
+          var options, opts, codeMirror, initialTextValue;
 
-          value = iElement.text();
+          initialTextValue = iElement.text();
+
+          options = uiCodemirrorConfig.codemirror || {};
+          opts = angular.extend({ value: initialTextValue }, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
 
           if (iElement[0].tagName === 'TEXTAREA') {
             // Might bug but still ...
-            codeMirror = window.CodeMirror.fromTextArea(iElement[0], {
-              value: value
-            });
+            codeMirror = window.CodeMirror.fromTextArea(iElement[0], opts);
           } else {
             iElement.html('');
             codeMirror = new window.CodeMirror(function(cm_el) {
               iElement.append(cm_el);
-            }, {
-              value: value
-            });
+            }, opts);
           }
-
-          options = uiCodemirrorConfig.codemirror || {};
-          opts = angular.extend({}, options, scope.$eval(iAttrs.uiCodemirror), scope.$eval(iAttrs.uiCodemirrorOpts));
-
-          function updateOptions(newValues) {
-            for (var key in newValues) {
-              if (newValues.hasOwnProperty(key)) {
-                codeMirror.setOption(key, newValues[key]);
-              }
-            }
-          }
-
-          updateOptions(opts);
 
           if (iAttrs.uiCodemirror) {
-            scope.$watch(iAttrs.uiCodemirror, updateOptions, true);
+            var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
+            scope.$watch(iAttrs.uiCodemirror, function updateOptions(newValues, oldValue) {
+              codemirrorDefaultsKeys.forEach(function (key) {
+                if (newValues.hasOwnProperty(key) && newValues[key] !== oldValue[key]) {
+                  codeMirror.setOption(key, newValues[key]);
+                }
+              });
+            }, true);
           }
-
 
           if (ngModel) {
             // CodeMirror expects a string, so make sure it gets one.
