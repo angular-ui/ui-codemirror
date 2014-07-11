@@ -38,9 +38,9 @@ angular.module('ui.codemirror', [])
             }, opts);
           }
 
-          if (iAttrs.uiCodemirror) {
+          if (iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts) {
             var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
-            scope.$watch(iAttrs.uiCodemirror, function updateOptions(newValues, oldValue) {
+            scope.$watch(iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts, function updateOptions(newValues, oldValue) {
               codemirrorDefaultsKeys.forEach(function (key) {
                 if (newValues.hasOwnProperty(key) && newValues[key] !== oldValue[key]) {
                   codeMirror.setOption(key, newValues[key]);

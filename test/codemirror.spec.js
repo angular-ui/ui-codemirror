@@ -303,10 +303,23 @@ describe('uiCodemirror', function () {
     });
 
 
-    it('should watch the options', function () {
+    it('should watch the options (attribute directive)', function () {
 
       scope.cmOption = { readOnly: true };
       $compile('<div ui-codemirror="cmOption"></div>')(scope);
+      scope.$digest();
+
+      expect(codemirror.getOption('readOnly')).toBeTruthy();
+
+      scope.cmOption.readOnly = false;
+      scope.$digest();
+      expect(codemirror.getOption('readOnly')).toBeFalsy();
+    });
+
+    it('should watch the options (element directive)', function () {
+
+      scope.cmOption = { readOnly: true };
+      $compile('<ui-codemirror ui-codemirror-opts="cmOption"></div>')(scope);
       scope.$digest();
 
       expect(codemirror.getOption('readOnly')).toBeTruthy();
