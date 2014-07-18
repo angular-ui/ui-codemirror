@@ -1,11 +1,10 @@
-'use strict';
-
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
 angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
   .directive('uiCodemirror', ['uiCodemirrorConfig', function (uiCodemirrorConfig) {
+    'use strict';
 
     return {
       restrict: 'EA',
