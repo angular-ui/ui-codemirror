@@ -98,7 +98,9 @@ angular.module('ui.codemirror', [])
             scope.$watch(iAttrs.uiRefresh, function (newVal, oldVal) {
               // Skip the initial watch firing
               if (newVal !== oldVal) {
-                codeMirror.refresh();
+                $timeout(function() {
+                  codeMirror.refresh();
+                });
               }
             });
           }
