@@ -5,7 +5,7 @@
  */
 angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
-  .directive('uiCodemirror', ['uiCodemirrorConfig', function (uiCodemirrorConfig) {
+  .directive('uiCodemirror', ['uiCodemirrorConfig', '$timeout', function (uiCodemirrorConfig, $timeout) {
 
     return {
       restrict: 'EA',
@@ -98,7 +98,9 @@ angular.module('ui.codemirror', [])
             scope.$watch(iAttrs.uiRefresh, function (newVal, oldVal) {
               // Skip the initial watch firing
               if (newVal !== oldVal) {
-                codeMirror.refresh();
+                $timeout(function() {
+                  codeMirror.refresh();
+                });
               }
             });
           }
