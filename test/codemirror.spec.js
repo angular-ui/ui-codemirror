@@ -237,13 +237,14 @@ describe('uiCodemirror', function () {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-pristine ng-untouched ng-valid ng-scope');
 
       var value = 'baz';
       codemirror.setValue(value);
+	  scope.$apply();
       expect(scope.foo).toBe(value);
 
-      expect(element.attr('class')).toEqual('ng-scope ng-valid ng-dirty');
+      expect(element.attr('class')).toEqual('ng-untouched ng-valid ng-scope ng-dirty ng-valid-parse');
 
     });
 
@@ -252,12 +253,12 @@ describe('uiCodemirror', function () {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-pristine ng-untouched ng-valid ng-scope');
 
       scope.$apply('foo = "bar"');
       expect(codemirror.getValue()).toBe(scope.foo);
 
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual('ng-pristine ng-untouched ng-valid ng-scope');
     });
 
 
@@ -278,6 +279,7 @@ describe('uiCodemirror', function () {
 
       // change should be called when user changes the input.
       codemirror.setValue('baz');
+	  scope.$apply();
       expect(scope.change.callCount).toBe(1);
       expect(scope.change).toHaveBeenCalledWith();
     });
