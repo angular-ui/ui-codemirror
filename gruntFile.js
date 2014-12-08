@@ -6,7 +6,7 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint', 'karma:unit']);
   grunt.registerTask('serve', ['connect:continuous', 'karma:continuous', 'watch']);
-  grunt.registerTask('dist', ['ngmin', 'uglify']);
+  grunt.registerTask('dist', ['ngAnnotate', 'uglify']);
 
   // HACK TO ACCESS TO THE COMPONENT-PUBLISHER
   function fakeTargetTask(prefix){
@@ -126,7 +126,7 @@ module.exports = function (grunt) {
       }
     },
 
-    ngmin: {
+    ngAnnotate: {
       main: {
         expand: true,
         cwd: 'src',
