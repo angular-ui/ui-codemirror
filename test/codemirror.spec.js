@@ -1,30 +1,27 @@
-describe('uiCodemirror', function () {
+describe('uiCodemirror', function() {
   'use strict';
 
-  var phantom = /PhantomJS/.test(navigator.userAgent);
-
   // declare these up here to be global to all tests
-  var scope, $compile, $timeout, uiConfig;
+  var scope, $compile, uiConfig;
   var codemirrorDefaults = window.CodeMirror.defaults;
 
-  beforeEach(function(){
+  beforeEach(function() {
     module('ui.codemirror');
 
-    inject(function (_$rootScope_, _$compile_, _$timeout_, uiCodemirrorConfig) {
+    inject(function(_$rootScope_, _$compile_, uiCodemirrorConfig) {
       scope = _$rootScope_.$new();
       $compile = _$compile_;
-      $timeout = _$timeout_;
       uiConfig = uiCodemirrorConfig;
     });
 
   });
 
-  afterEach(function () {
+  afterEach(function() {
     uiConfig = {};
   });
 
 
-  it('should not throw an error when window.CodeMirror is defined', function () {
+  it('should not throw an error when window.CodeMirror is defined', function() {
     function compile() {
       $compile('<div ui-codemirror></div>')(scope);
     }
@@ -32,25 +29,26 @@ describe('uiCodemirror', function () {
     var _CodeMirror = window.CodeMirror;
     delete window.CodeMirror;
     expect(window.CodeMirror).toBeUndefined();
-    expect(compile).toThrow(new Error('ui-codemirror need CodeMirror to work... (o rly?)'));
+    expect(compile)
+      .toThrow(new Error('ui-codemirror need CodeMirror to work... (o rly?)'));
     window.CodeMirror = _CodeMirror;
   });
 
-  describe('destruction', function () {
+  describe('destruction', function() {
 
     var parentElement;
 
-    beforeEach(function () {
+    beforeEach(function() {
       parentElement = angular.element('<div></div>');
       angular.element(document.body).prepend(parentElement);
     });
 
-    afterEach(function () {
+    afterEach(function() {
       parentElement.remove();
     });
 
     function shouldDestroyTest(elementType, template) {
-      it('should destroy the directive of ' + elementType, function () {
+      it('should destroy the directive of ' + elementType, function() {
         var element = angular.element(template);
         parentElement.append(element);
 
@@ -69,7 +67,7 @@ describe('uiCodemirror', function () {
 
   });
 
-  it('should not throw an error when window.CodeMirror is defined', function () {
+  it('should not throw an error when window.CodeMirror is defined an attribute', function() {
     function compile() {
       $compile('<div ui-codemirror></div>')(scope);
     }
@@ -79,9 +77,9 @@ describe('uiCodemirror', function () {
   });
 
 
-  it('should not throw an error when window.CodeMirror is defined', function () {
+  it('should not throw an error when window.CodeMirror is defined an element', function() {
     function compile() {
-      $compile('<div ui-codemirror></div>')(scope);
+      $compile('<ui-codemirror></ui-codemirror>')(scope);
     }
 
     expect(window.CodeMirror).toBeDefined();
@@ -89,51 +87,54 @@ describe('uiCodemirror', function () {
   });
 
 
-  it('should watch all uiCodemirror attribute', function () {
+  it('should watch all uiCodemirror attribute', function() {
     spyOn(scope, '$watch');
     scope.cmOption = {};
     $compile('<div ui-codemirror="cmOption"  ng-model="foo" ui-refresh="sdf"></div>')(scope);
-    expect(scope.$watch.callCount).toEqual(3); // The uiCodemirror+ the ngModel + the uiRefresh
+    expect(scope.$watch.calls.count()).toEqual(3); // The uiCodemirror+ the ngModel + the uiRefresh
     expect(scope.$watch).toHaveBeenCalledWith('cmOption', jasmine.any(Function), true); // uiCodemirror
     expect(scope.$watch).toHaveBeenCalledWith(jasmine.any(Function)); // ngModel
     expect(scope.$watch).toHaveBeenCalledWith('sdf', jasmine.any(Function)); // uiRefresh
   });
 
-  describe('CodeMirror instance', function () {
+  describe('CodeMirror instance', function() {
 
     var codemirror = null, spies = angular.noop;
 
-    beforeEach(function () {
+    beforeEach(function() {
       var _constructor = window.CodeMirror;
-      window.CodeMirror = jasmine.createSpy('window.CodeMirror').andCallFake(function () {
-        codemirror = _constructor.apply(this, arguments);
-        spies(codemirror);
-        return codemirror;
-      });
+      window.CodeMirror = jasmine.createSpy('window.CodeMirror')
+        .and.callFake(function() {
+          codemirror = _constructor.apply(this, arguments);
+          spies(codemirror);
+          return codemirror;
+        });
 
       window.CodeMirror.defaults = codemirrorDefaults;
     });
 
 
-    it('should call the CodeMirror constructor with a function', function () {
+    it('should call the CodeMirror constructor with a function', function() {
       $compile('<div ui-codemirror></div>')(scope);
 
-      expect(window.CodeMirror.callCount).toEqual(1);
-      expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
+      expect(window.CodeMirror.calls.count()).toEqual(1);
+      expect(window.CodeMirror)
+        .toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
 
       expect(codemirror).toBeDefined();
     });
 
-    it('should work as an element', function () {
+    it('should work as an element', function() {
       $compile('<ui-codemirror></ui-codemirror>')(scope);
 
-      expect(window.CodeMirror.callCount).toEqual(1);
-      expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
+      expect(window.CodeMirror.calls.count()).toEqual(1);
+      expect(window.CodeMirror)
+        .toHaveBeenCalledWith(jasmine.any(Function), jasmine.any(Object));
 
       expect(codemirror).toBeDefined();
     });
 
-    it('should have a child element with a div.CodeMirror', function () {
+    it('should have a child element with a div.CodeMirror', function() {
       // Explicit a parent node to support the directive.
       var element = $compile('<div ui-codemirror></div>')(scope).children();
 
@@ -145,70 +146,89 @@ describe('uiCodemirror', function () {
     });
 
 
-    describe('options', function () {
+    describe('options', function() {
 
-      spies = function (codemirror) {
+      spies = function(codemirror) {
         codemirror._setOption = codemirror._setOption || codemirror.setOption;
-        codemirror.setOption = jasmine.createSpy('codemirror.setOption').andCallFake(function () {
-          codemirror._setOption.apply(this, arguments);
-        });
+        codemirror.setOption = jasmine.createSpy('codemirror.setOption')
+          .and.callFake(function() {
+            codemirror._setOption.apply(this, arguments);
+          });
       };
 
-      it('should not be called', function () {
+      it('should not be called', function() {
         $compile('<div ui-codemirror></div>')(scope);
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), codemirrorDefaults);
+        expect(window.CodeMirror)
+          .toHaveBeenCalledWith(jasmine.any(Function), { value: '' });
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should include the passed options (attribute directive)', function () {
+      it('should include the passed options (attribute directive)', function() {
         $compile('<div ui-codemirror="{oof: \'baar\'}"></div>')(scope);
 
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' }));
+        expect(window.CodeMirror)
+          .toHaveBeenCalledWith(jasmine.any(Function), {
+            value: '',
+            oof: 'baar'
+          });
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should include the passed options (element directive)', function () {
+      it('should include the passed options (element directive)', function() {
         $compile('<ui-codemirror ui-codemirror-opts="{oof: \'baar\'}"></ui-codemirror>')(scope);
 
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' }));
+        expect(window.CodeMirror)
+          .toHaveBeenCalledWith(jasmine.any(Function), {
+            value: '',
+            oof: 'baar'
+          });
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should include the default options', function () {
-        uiConfig.codemirror = {bar: 'baz'};
+      it('should include the default options', function() {
+        uiConfig.codemirror = { bar: 'baz' };
         $compile('<div ui-codemirror></div>')(scope);
 
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { bar: 'baz' }));
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), {
+          value: '',
+          bar: 'baz'
+        });
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should extent the default options', function () {
-        uiConfig.codemirror = {bar: 'baz'};
+      it('should extent the default options', function() {
+        uiConfig.codemirror = { bar: 'baz' };
         $compile('<div ui-codemirror="{oof: \'baar\'}"></div>')(scope);
 
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { oof: 'baar' , bar: 'baz' }));
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), {
+          value: '',
+          oof: 'baar',
+          bar: 'baz'
+        });
         expect(codemirror.setOption).not.toHaveBeenCalled();
       });
 
-      it('should impact codemirror', function () {
+      it('should impact codemirror', function() {
         uiConfig.codemirror = {};
         $compile('<div ui-codemirror="{theme: \'baar\'}"></div>')(scope);
 
-        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), angular.extend(codemirrorDefaults, { theme: 'baar' }));
+        expect(window.CodeMirror).toHaveBeenCalledWith(jasmine.any(Function), {
+          value: '',
+          theme: 'baar'
+        });
         expect(codemirror.setOption).not.toHaveBeenCalled();
 
         expect(codemirror.getOption('theme')).toEqual('baar');
       });
     });
 
-    it('should not trigger watch ui-refresh', function () {
+    it('should not trigger watch ui-refresh', function() {
       spyOn(scope, '$watch');
       $compile('<div ui-codemirror ui-refresh=""></div>')(scope);
-      expect(scope.$watch.callCount).toEqual(0);
       expect(scope.$watch).not.toHaveBeenCalled();
     });
 
-    it('should trigger the CodeMirror.refresh() method', function () {
+    it('should trigger the CodeMirror.refresh() method', function() {
       $compile('<div ui-codemirror ui-refresh="bar"></div>')(scope);
 
 
@@ -228,43 +248,48 @@ describe('uiCodemirror', function () {
       expect(scope.bar).toBeTruthy();
       expect(codemirror.refresh).toHaveBeenCalled();
 
-      expect(codemirror.refresh.callCount).toEqual(4);
+      expect(codemirror.refresh.calls.count()).toEqual(4);
     });
 
 
-    it('when the IDE changes should update the model', function () {
-      if (phantom) return;
+    it('when the IDE changes should update the model', function() {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual(
+        'ng-pristine ng-untouched ng-valid ng-scope'
+      );
 
       var value = 'baz';
       codemirror.setValue(value);
       expect(scope.foo).toBe(value);
 
-      expect(element.attr('class')).toEqual('ng-scope ng-valid ng-dirty');
+      expect(element.attr('class')).toEqual(
+        'ng-untouched ng-valid ng-scope ng-dirty ng-valid-parse'
+      );
 
     });
 
-    it('when the model changes should update the IDE', function () {
-      if (phantom) return;
+    it('when the model changes should update the IDE', function() {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
 
       expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual(
+        'ng-pristine ng-untouched ng-valid ng-scope'
+      );
 
       scope.$apply('foo = "bar"');
       expect(codemirror.getValue()).toBe(scope.foo);
 
-      expect(element.attr('class')).toEqual('ng-scope ng-pristine ng-valid');
+      expect(element.attr('class')).toEqual(
+        'ng-pristine ng-untouched ng-valid ng-scope'
+      );
     });
 
 
-    it('when the IDE changes should use ngChange', function () {
-      if (phantom) return;
+    it('when the IDE changes should use ngChange', function() {
       scope.change = angular.noop;
-      spyOn(scope, 'change').andCallFake(function() { expect(scope.foo).toBe('baz'); });
+      spyOn(scope, 'change').and.callFake(function() { expect(scope.foo).toBe('baz'); });
 
       $compile('<div ui-codemirror ng-model="foo" ng-change="change()"></div>')(scope);
 
@@ -278,11 +303,11 @@ describe('uiCodemirror', function () {
 
       // change should be called when user changes the input.
       codemirror.setValue('baz');
-      expect(scope.change.callCount).toBe(1);
+      expect(scope.change.calls.count()).toBe(1);
       expect(scope.change).toHaveBeenCalledWith();
     });
 
-    it('should runs the onLoad callback', function () {
+    it('should runs the onLoad callback', function() {
       scope.codemirrorLoaded = jasmine.createSpy('scope.codemirrorLoaded');
 
       $compile('<div ui-codemirror="{onLoad: codemirrorLoaded}"></div>')(scope);
@@ -291,8 +316,8 @@ describe('uiCodemirror', function () {
       expect(scope.codemirrorLoaded).toHaveBeenCalledWith(codemirror);
     });
 
-    it('responds to the $broadcast event "CodeMirror"', function () {
-      var broadcast = { };
+    it('responds to the $broadcast event "CodeMirror"', function() {
+      var broadcast = {};
       broadcast.callback = jasmine.createSpy('broadcast.callback');
 
       $compile('<div ui-codemirror></div>')(scope);
@@ -303,7 +328,7 @@ describe('uiCodemirror', function () {
     });
 
 
-    it('should watch the options (attribute directive)', function () {
+    it('should watch the options (attribute directive)', function() {
 
       scope.cmOption = { readOnly: true };
       $compile('<div ui-codemirror="cmOption"></div>')(scope);
@@ -316,7 +341,7 @@ describe('uiCodemirror', function () {
       expect(codemirror.getOption('readOnly')).toBeFalsy();
     });
 
-    it('should watch the options (element directive)', function () {
+    it('should watch the options (element directive)', function() {
 
       scope.cmOption = { readOnly: true };
       $compile('<ui-codemirror ui-codemirror-opts="cmOption"></div>')(scope);
@@ -329,7 +354,7 @@ describe('uiCodemirror', function () {
       expect(codemirror.getOption('readOnly')).toBeFalsy();
     });
 
-    it('should watch the options (object property)', function () {
+    it('should watch the options (object property)', function() {
 
       scope.cm = {};
       scope.cm.option = { readOnly: true };
@@ -345,7 +370,7 @@ describe('uiCodemirror', function () {
 
   });
 
-  it('when the model is an object or an array should throw an error', function () {
+  it('when the model is an object or an array should throw an error', function() {
     function compileWithObject() {
       $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
       scope.foo = {};
