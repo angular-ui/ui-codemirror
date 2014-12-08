@@ -140,7 +140,9 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
       // Skip the initial watch firing
       if (newVal !== oldVal) {
-        $timeout(codeMirror.refresh);
+        $timeout(function() {
+          codeMirror.refresh();
+        });
       }
     });
   }
