@@ -305,6 +305,7 @@ describe('uiCodemirror', function() {
 
       // change should be called when user changes the input.
       codemirror.setValue('baz');
+      scope.$apply();
       expect(scope.change.calls.count()).toBe(1);
       expect(scope.change).toHaveBeenCalledWith();
     });
