@@ -127,8 +127,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     codemirror.on('change', function(instance) {
       var newValue = instance.getValue();
       if (newValue !== ngModel.$viewValue) {
-        // Changes to the model from a callback need to be wrapped in $apply or angular will not notice them
-        scope.$apply(function() {
+        scope.$applyAsync(function() {
           ngModel.$setViewValue(newValue);
         });
       }
