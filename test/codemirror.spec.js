@@ -2,15 +2,16 @@ describe('uiCodemirror', function() {
   'use strict';
 
   // declare these up here to be global to all tests
-  var scope, $compile, uiConfig;
+  var scope, $compile, $timeout, uiConfig;
   var codemirrorDefaults = window.CodeMirror.defaults;
 
   beforeEach(function() {
     module('ui.codemirror');
 
-    inject(function(_$rootScope_, _$compile_, uiCodemirrorConfig) {
+    inject(function(_$rootScope_, _$compile_, _$timeout_, uiCodemirrorConfig) {
       scope = _$rootScope_.$new();
       $compile = _$compile_;
+      $timeout = _$timeout_;
       uiConfig = uiCodemirrorConfig;
     });
 
@@ -237,15 +238,19 @@ describe('uiCodemirror', function() {
 
       scope.$apply('bar = false');
       expect(scope.bar).toBeFalsy();
+      $timeout.flush();
       expect(codemirror.refresh).toHaveBeenCalled();
       scope.$apply('bar = true');
       expect(scope.bar).toBeTruthy();
+      $timeout.flush();
       expect(codemirror.refresh).toHaveBeenCalled();
       scope.$apply('bar = 0');
       expect(scope.bar).toBeFalsy();
+      $timeout.flush();
       expect(codemirror.refresh).toHaveBeenCalled();
       scope.$apply('bar = 1');
       expect(scope.bar).toBeTruthy();
+      $timeout.flush();
       expect(codemirror.refresh).toHaveBeenCalled();
 
       expect(codemirror.refresh.calls.count()).toEqual(4);
