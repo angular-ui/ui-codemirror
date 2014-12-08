@@ -3,7 +3,7 @@
  * Binds a CodeMirror widget to a <textarea> element.
  */
 angular.module('ui.codemirror', []).constant('uiCodemirrorConfig', {}).directive('uiCodemirror', uiCodemirrorDirective);
-function uiCodemirrorDirective(uiCodemirrorConfig) {
+function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   return {
     restrict: 'EA',
     require: '?ngModel',
@@ -108,7 +108,7 @@ function uiCodemirrorDirective(uiCodemirrorConfig) {
     scope.$watch(uiRefreshAttr, function (newVal, oldVal) {
       // Skip the initial watch firing
       if (newVal !== oldVal) {
-        codeMirror.refresh();
+        $timeout(codeMirror.refresh);
       }
     });
   }
