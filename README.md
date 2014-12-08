@@ -1,4 +1,4 @@
-# UI.Codemirror directive [![Build Status](https://travis-ci.org/angular-ui/ui-codemirror.png)](https://travis-ci.org/angular-ui/ui-codemirror)
+# UI.Codemirror directive [![Build Status][travis-image]][travis-url] [![Code Climate][codeclimate-image]][codeclimate-url]
 
 This directive allows you to add [CodeMirror](http://codemirror.net/) to your textarea elements.
 
@@ -167,3 +167,8 @@ grunt dist build:bower
 ```
 
 it will put the final files in the _'dist'_ folder and a sample of the bower tag output in the _'out/built/bower'_ folder.
+
+[travis-url]: https://travis-ci.org/ModuleLoader/es6-module-loader
+[travis-image]: https://travis-ci.org/angular-ui/ui-codemirror.svg?branch=master
+[codeclimate-url]: https://codeclimate.com/github/angular-ui/ui-codemirror
+[codeclimate-image]: https://codeclimate.com/github/angular-ui/ui-codemirror/badges/gpa.svg
