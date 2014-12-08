@@ -259,36 +259,33 @@ describe('uiCodemirror', function() {
 
     it('when the IDE changes should update the model', function() {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
+      var ctrl = element.controller('ngModel');
 
-      expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual(
-        'ng-pristine ng-untouched ng-valid ng-scope'
-      );
+      expect(ctrl.$pristine).toBe(true);
+      expect(ctrl.$valid).toBe(true);
 
       var value = 'baz';
       codemirror.setValue(value);
+      scope.$apply();
       expect(scope.foo).toBe(value);
 
-      expect(element.attr('class')).toEqual(
-        'ng-untouched ng-valid ng-scope ng-dirty ng-valid-parse'
-      );
+      expect(ctrl.$valid).toBe(true);
+      expect(ctrl.$dirty).toBe(true);
 
     });
 
     it('when the model changes should update the IDE', function() {
       var element = $compile('<div ui-codemirror ng-model="foo"></div>')(scope);
+      var ctrl = element.controller('ngModel');
 
-      expect(element).toBeDefined();
-      expect(element.attr('class')).toEqual(
-        'ng-pristine ng-untouched ng-valid ng-scope'
-      );
+      expect(ctrl.$pristine).toBe(true);
+      expect(ctrl.$valid).toBe(true);
 
       scope.$apply('foo = "bar"');
       expect(codemirror.getValue()).toBe(scope.foo);
 
-      expect(element.attr('class')).toEqual(
-        'ng-pristine ng-untouched ng-valid ng-scope'
-      );
+      expect(ctrl.$pristine).toBe(true);
+      expect(ctrl.$valid).toBe(true);
     });
 
 
