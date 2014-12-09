@@ -12,7 +12,6 @@ before_install:
 after_success:
 - "./node_modules/angular-ui-publisher/travis/authentication.sh || exit 0"
 - "grunt dist build:gh-pages publish:gh-pages build:bower publish:bower"
-script: grunt
 env:
   global:
   - REPO="git@github.com:angular-ui/ui-codemirror.git"

@@ -1,11 +1,11 @@
-# UI.Codemirror directive [![Build Status](https://travis-ci.org/angular-ui/ui-codemirror.png)](https://travis-ci.org/angular-ui/ui-codemirror)
+# UI.Codemirror directive [![Build Status][travis-image]][travis-url] [![Code Climate][codeclimate-image]][codeclimate-url]
 
 This directive allows you to add [CodeMirror](http://codemirror.net/) to your textarea elements.
 
 ## Requirements
 
-- AngularJS
-- [CodeMirror 3.x|4.x](https://github.com/marijnh/CodeMirror)
+- AngularJS 1.3.x
+- [CodeMirror 4.8.x](https://github.com/marijnh/CodeMirror)
 
 
 ## Usage
@@ -13,7 +13,7 @@ This directive allows you to add [CodeMirror](http://codemirror.net/) to your te
 You can get it from [Bower](http://bower.io/)
 
 ```sh
-bower install angular-ui-codemirror\#bower
+bower install angular-ui-codemirror
 ```
 
 This will copy the UI.Codemirror files into a `bower_components` folder, along with its dependencies. Load the script files in your application:
@@ -147,10 +147,28 @@ We have one task to serve them all !
 grunt serve
 ```
 
-It's equal to run separately: 
+It's equal to run separately:
 
 * `grunt connect:server` : giving you a development server at [http://localhost:8000/](http://localhost:8000/).
 
 * `grunt karma:server` : giving you a Karma server to run tests (at [http://localhost:9876/](http://localhost:9876/) by default). You can force a test on this server with `grunt karma:unit:run`.
 
-* `grunt watch` : will automatically test your code and build your demo.  You can demo generation with `grunt build-doc`.
+* `grunt watch` : will automatically test your code and build your demo.  You can demo generation with `grunt build:gh-pages`.
+
+
+### Dist
+
+This repo is using the [angular-ui/angular-ui-publisher](https://github.com/angular-ui/angular-ui-publisher).
+New tags will automatically trigger a new publication.
+To test is locally you can trigger a :
+
+```sh
+grunt dist build:bower
+```
+
+it will put the final files in the _'dist'_ folder and a sample of the bower tag output in the _'out/built/bower'_ folder.
+
+[travis-url]: https://travis-ci.org/ModuleLoader/es6-module-loader
+[travis-image]: https://travis-ci.org/angular-ui/ui-codemirror.svg?branch=master
+[codeclimate-url]: https://codeclimate.com/github/angular-ui/ui-codemirror
+[codeclimate-image]: https://codeclimate.com/github/angular-ui/ui-codemirror/badges/gpa.svg
