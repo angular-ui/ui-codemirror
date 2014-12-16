@@ -168,7 +168,7 @@ grunt dist build:bower
 
 it will put the final files in the _'dist'_ folder and a sample of the bower tag output in the _'out/built/bower'_ folder.
 
-[travis-url]: https://travis-ci.org/ModuleLoader/es6-module-loader
+[travis-url]: https://travis-ci.org/angular-ui/ui-codemirror
 [travis-image]: https://travis-ci.org/angular-ui/ui-codemirror.svg?branch=master
 [codeclimate-url]: https://codeclimate.com/github/angular-ui/ui-codemirror
 [codeclimate-image]: https://codeclimate.com/github/angular-ui/ui-codemirror/badges/gpa.svg
