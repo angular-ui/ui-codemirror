@@ -31,7 +31,7 @@ describe('uiCodemirror', function() {
     delete window.CodeMirror;
     expect(window.CodeMirror).toBeUndefined();
     expect(compile)
-      .toThrow(new Error('ui-codemirror need CodeMirror to work... (o rly?)'));
+      .toThrow(new Error('ui-codemirror needs CodeMirror to work... (o rly?)'));
     window.CodeMirror = _CodeMirror;
   });
 

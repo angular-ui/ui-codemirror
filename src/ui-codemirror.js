@@ -19,7 +19,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
       // Require CodeMirror
       if (angular.isUndefined(window.CodeMirror)) {
-        throw new Error('ui-codemirror need CodeMirror to work... (o rly?)');
+        throw new Error('ui-codemirror needs CodeMirror to work... (o rly?)');
       }
 
       return postLink;
