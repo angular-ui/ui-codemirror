@@ -111,6 +111,7 @@ describe('uiCodemirror', function() {
           return codemirror;
         });
 
+      window.CodeMirror.signal   = _constructor.signal;
       window.CodeMirror.defaults = codemirrorDefaults;
     });
 
@@ -272,6 +273,34 @@ describe('uiCodemirror', function() {
       expect(ctrl.$valid).toBe(true);
       expect(ctrl.$dirty).toBe(true);
 
+    });
+
+    it('when the IDE changes should update the model on blur', function() {
+      // Define values
+      var oldValue = 'bar';
+      var newValue = 'baz';
+
+      // Create codemirror editor and bind with updateOn blur
+      var element = $compile('<div ui-codemirror ng-model="foo" ng-model-options="{updateOn: \'blur\'}"></div>')(scope);
+      var ctrl = element.controller('ngModel');
+
+      // Check initial states
+      expect(ctrl.$pristine).toBe(true);
+      expect(ctrl.$valid).toBe(true);
+      scope.$apply('foo = "' + oldValue + '"');
+      expect(scope.foo).toBe(oldValue);
+      expect(codemirror.getValue()).toBe(oldValue);
+
+      // Change text but DO NOT blur
+      codemirror.setValue(newValue);
+      expect(scope.foo).toBe(oldValue);
+      expect(codemirror.getValue()).toBe(newValue);
+
+      // Blur and observe change to model
+      window.CodeMirror.signal(codemirror, 'blur', codemirror);
+      expect(scope.foo).toBe(newValue);
+      expect(ctrl.$valid).toBe(true);
+      expect(ctrl.$dirty).toBe(true);
     });
 
     it('when the model changes should update the IDE', function() {

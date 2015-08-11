@@ -10,7 +10,7 @@ angular.module('ui.codemirror', [])
 /**
  * @ngInject
  */
-function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
+function uiCodemirrorDirective($timeout, $rootScope, uiCodemirrorConfig) {
 
   return {
     restrict: 'EA',
@@ -132,6 +132,28 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         });
       }
     });
+
+    // Commit as with NgModelController
+    codemirror.on('blur', function() {
+      if (ngModel.$touched) {
+        return;
+      }
+
+      if ($rootScope.$$phase) {
+    	  scope.$evalAsync(ngModel.$setTouched);
+      } else {
+    	  scope.$apply(ngModel.$setTouched);
+      }
+    });
+
+    // Debounce as with NgModelController
+    if (ngModel.$options && ngModel.$options.updateOn) {
+      ngModel.$options.updateOn.split(/\s+/).forEach(function(trigger) {
+        codemirror.on(trigger, function() {
+      	  ngModel.$$debounceViewValueCommit(trigger);
+        });
+      });
+    }
   }
 
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
