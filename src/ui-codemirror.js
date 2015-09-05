@@ -67,7 +67,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         unbind();
       });
       handles = null;
-    }))
+    }));
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
