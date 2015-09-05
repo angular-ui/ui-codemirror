@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
@@ -11,6 +9,7 @@ angular.module('ui.codemirror', [])
  * @ngInject
  */
 function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
+  'use strict';
 
   return {
     restrict: 'EA',
@@ -27,6 +26,8 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   };
 
   function postLink(scope, iElement, iAttrs, ngModel) {
+
+    scope.handles = [];
 
     var codemirrorOptions = angular.extend(
       { value: iElement.text() },
@@ -49,18 +50,25 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     // Allow access to the CodeMirror instance through a broadcasted event
     // eg: $broadcast('CodeMirror', function(cm){...});
-    scope.$on('CodeMirror', function(event, callback) {
+    scope.handles.push(scope.$on('CodeMirror', function(event, callback) {
       if (angular.isFunction(callback)) {
         callback(codemirror);
       } else {
         throw new Error('the CodeMirror event requires a callback function');
       }
-    });
+    }));
 
     // onLoad callback
     if (angular.isFunction(codemirrorOptions.onLoad)) {
       codemirrorOptions.onLoad(codemirror);
     }
+
+    scope.handles.push(scope.$on('$destroy', function(){
+      angular.forEach(scope.handles, function(unbind){
+        unbind();
+      });
+      scope.handles = null;
+    }));
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
@@ -83,7 +91,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     if (!uiCodemirrorAttr) { return; }
 
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
-    scope.$watch(uiCodemirrorAttr, updateOptions, true);
+    scope.handles.push(scope.$watch(uiCodemirrorAttr, updateOptions, true));
     function updateOptions(newValues, oldValue) {
       if (!angular.isObject(newValues)) { return; }
       codemirrorDefaultsKeys.forEach(function(key) {
@@ -137,14 +145,14 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
     if (!uiRefreshAttr) { return; }
 
-    scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
+    scope.handles.push(scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
       // Skip the initial watch firing
       if (newVal !== oldVal) {
         $timeout(function() {
           codeMirror.refresh();
         });
       }
-    });
+    }));
   }
 
 }
