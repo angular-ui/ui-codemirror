@@ -11,7 +11,6 @@ angular.module('ui.codemirror', [])
 function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   'use strict';
 
-  var handles = [];
   return {
     restrict: 'EA',
     require: '?ngModel',
@@ -27,6 +26,8 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   };
 
   function postLink(scope, iElement, iAttrs, ngModel) {
+
+    scope.handles = [];
 
     var codemirrorOptions = angular.extend(
       { value: iElement.text() },
@@ -49,7 +50,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     // Allow access to the CodeMirror instance through a broadcasted event
     // eg: $broadcast('CodeMirror', function(cm){...});
-    handles.push(scope.$on('CodeMirror', function(event, callback) {
+    scope.handles.push(scope.$on('CodeMirror', function(event, callback) {
       if (angular.isFunction(callback)) {
         callback(codemirror);
       } else {
@@ -62,11 +63,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       codemirrorOptions.onLoad(codemirror);
     }
 
-    handles.push(scope.$on('$destroy', function(){
-      angular.forEach(handles, function(unbind){
+    scope.handles.push(scope.$on('$destroy', function(){
+      angular.forEach(scope.handles, function(unbind){
         unbind();
       });
-      handles = null;
+      scope.handles = null;
     }));
   }
 
@@ -90,7 +91,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     if (!uiCodemirrorAttr) { return; }
 
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
-    handles.push(scope.$watch(uiCodemirrorAttr, updateOptions, true));
+    scope.handles.push(scope.$watch(uiCodemirrorAttr, updateOptions, true));
     function updateOptions(newValues, oldValue) {
       if (!angular.isObject(newValues)) { return; }
       codemirrorDefaultsKeys.forEach(function(key) {
@@ -144,7 +145,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
     if (!uiRefreshAttr) { return; }
 
-    handles.push(scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
+    scope.handles.push(scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
       // Skip the initial watch firing
       if (newVal !== oldVal) {
         $timeout(function() {
