@@ -11,6 +11,7 @@ angular.module('ui.codemirror', [])
 function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   'use strict';
 
+  var handles = [];
   return {
     restrict: 'EA',
     require: '?ngModel',
@@ -48,18 +49,25 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     // Allow access to the CodeMirror instance through a broadcasted event
     // eg: $broadcast('CodeMirror', function(cm){...});
-    scope.$on('CodeMirror', function(event, callback) {
+    handles.push(scope.$on('CodeMirror', function(event, callback) {
       if (angular.isFunction(callback)) {
         callback(codemirror);
       } else {
         throw new Error('the CodeMirror event requires a callback function');
       }
-    });
+    }));
 
     // onLoad callback
     if (angular.isFunction(codemirrorOptions.onLoad)) {
       codemirrorOptions.onLoad(codemirror);
     }
+
+    handles.push(scope.$on('$destroy', function(){
+      angular.forEach(handles, function(unbind){
+        unbind();
+      });
+      handles = null;
+    }))
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
@@ -82,7 +90,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     if (!uiCodemirrorAttr) { return; }
 
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
-    scope.$watch(uiCodemirrorAttr, updateOptions, true);
+    handles.push(scope.$watch(uiCodemirrorAttr, updateOptions, true));
     function updateOptions(newValues, oldValue) {
       if (!angular.isObject(newValues)) { return; }
       codemirrorDefaultsKeys.forEach(function(key) {
@@ -136,14 +144,14 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
     if (!uiRefreshAttr) { return; }
 
-    scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
+    handles.push(scope.$watch(uiRefreshAttr, function(newVal, oldVal) {
       // Skip the initial watch firing
       if (newVal !== oldVal) {
         $timeout(function() {
           codeMirror.refresh();
         });
       }
-    });
+    }));
   }
 
 }
