@@ -40,7 +40,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     var showMergeView = angular.isDefined(iAttrs.mergeView);
 
     if(showMergeView) {
-      if(angular.isUndefined(CodeMirror.MergeView)) {
+      if(angular.isUndefined(window.CodeMirror.MergeView)) {
         throw new Error('merge-view needs the merge plugin and diff_match_patch to be loaded!');
       }
       codemirror = newCodemirrorMergeEditor(iElement, codemirrorOptions);
