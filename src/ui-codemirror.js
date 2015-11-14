@@ -35,7 +35,19 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       scope.$eval(iAttrs.uiCodemirrorOpts)
     );
 
-    var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
+    var codemirror;
+
+    var showMergeView = angular.isDefined(iAttrs.mergeView);
+
+    if(showMergeView) {
+      if(angular.isUndefined(CodeMirror.MergeView)) {
+        throw new Error('merge-view needs the merge plugin and diff_match_patch to be loaded!');
+      }
+      codemirror = newCodemirrorMergeEditor(iElement, codemirrorOptions);
+    } else {
+      codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
+    }
+
 
     configOptionsWatcher(
       codemirror,
@@ -43,7 +55,8 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       scope
     );
 
-    configNgModelLink(codemirror, ngModel, scope);
+    configNgModelLink(codemirror, ngModel, scope, showMergeView);
+
 
     configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
 
@@ -64,19 +77,28 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
-    var codemirrot;
+    var codemirror;
 
     if (iElement[0].tagName === 'TEXTAREA') {
       // Might bug but still ...
-      codemirrot = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
+      codemirror = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
     } else {
       iElement.html('');
-      codemirrot = new window.CodeMirror(function(cm_el) {
+      codemirror = new window.CodeMirror(function(cm_el) {
         iElement.append(cm_el);
       }, codemirrorOptions);
     }
 
-    return codemirrot;
+    return codemirror;
+  }
+
+  function newCodemirrorMergeEditor(iElement, codemirrorOptions) {
+    var codemirror;
+
+    iElement.html('');
+    codemirror = new window.CodeMirror.MergeView(iElement[0], codemirrorOptions);
+
+    return codemirror;
   }
 
   function configOptionsWatcher(codemirrot, uiCodemirrorAttr, scope) {
@@ -99,7 +121,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     }
   }
 
-  function configNgModelLink(codemirror, ngModel, scope) {
+  function configNgModelLink(codemirror, ngModel, scope, showMergeView) {
     if (!ngModel) { return; }
     // CodeMirror expects a string, so make sure it gets one.
     // This does not change the model.
@@ -113,25 +135,46 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     });
 
 
-    // Override the ngModelController $render method, which is what gets called when the model is updated.
-    // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
-    ngModel.$render = function() {
-      //Code mirror expects a string so make sure it gets one
-      //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
-      var safeViewValue = ngModel.$viewValue || '';
-      codemirror.setValue(safeViewValue);
-    };
-
-
     // Keep the ngModel in sync with changes from CodeMirror
-    codemirror.on('change', function(instance) {
-      var newValue = instance.getValue();
-      if (newValue !== ngModel.$viewValue) {
-        scope.$evalAsync(function() {
-          ngModel.$setViewValue(newValue);
-        });
-      }
-    });
+    if(showMergeView) {
+      // Override the ngModelController $render method, which is what gets called when the model is updated.
+      // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
+      ngModel.$render = function() {
+        //Code mirror expects a string so make sure it gets one
+        //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
+        var safeViewValue = ngModel.$viewValue || '';
+        codemirror.edit.setValue(safeViewValue);
+      };
+
+      codemirror.edit.on('change', function(instance) {
+        var newValue = instance.getValue();
+        if (newValue !== ngModel.$viewValue) {
+          scope.$evalAsync(function() {
+            ngModel.$setViewValue(newValue);
+          });
+        }
+      });
+    } else {
+      // Override the ngModelController $render method, which is what gets called when the model is updated.
+      // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
+      ngModel.$render = function() {
+        //Code mirror expects a string so make sure it gets one
+        //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
+        var safeViewValue = ngModel.$viewValue || '';
+        codemirror.setValue(safeViewValue);
+      };
+
+      codemirror.on('change', function(instance) {
+        var newValue = instance.getValue();
+        if (newValue !== ngModel.$viewValue) {
+          scope.$evalAsync(function() {
+            ngModel.$setViewValue(newValue);
+          });
+        }
+      });
+    }
+
+
   }
 
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
@@ -148,3 +191,5 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   }
 
 }
+
+uiCodemirrorDirective.$inject = ['$timeout', 'uiCodemirrorConfig'];
