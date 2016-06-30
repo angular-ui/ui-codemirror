@@ -149,4 +149,4 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
 }
 
-uiCodemirrorDirective.$inject = [ "$timeout", "uiCodemirrorConfig" ];
+uiCodemirrorDirective.$inject = [ '$timeout', 'uiCodemirrorConfig' ];
