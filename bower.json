@@ -6,9 +6,6 @@
   "license": "MIT",
   "homepage": "http://angular-ui.github.com",
   "main": "./src/ui-codemirror.js",
-  "scripts": {
-    "postinstall": "echo 'post install bower'"
-  },
   "ignore": [
     "**/.*",
     "node_modules",
