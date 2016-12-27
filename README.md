@@ -1,4 +1,4 @@
-# UI.Codemirror directive [![Build Status][travis-image]][travis-url] [![Code Climate][codeclimate-image]][codeclimate-url]
+# UI.Codemirror directive [![Build Status][travis-image]][travis-url] [![Code Climate][codeclimate-image]][codeclimate-url] [![CDNJS](https://img.shields.io/cdnjs/v/angular-ui-codemirror.svg)](https://cdnjs.com/libraries/angular-ui-codemirror)
 
 This directive allows you to add [CodeMirror](http://codemirror.net/) to your textarea elements.
 
