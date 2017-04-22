@@ -3,7 +3,7 @@
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
-angular.module('ui.codemirror', [])
+module.exports = angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
   .directive('uiCodemirror', uiCodemirrorDirective);
 
