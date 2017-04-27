@@ -76,6 +76,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       }, codemirrorOptions);
     }
 
+    codemirrot.setSize("100%", "100%");
     return codemirrot;
   }
 
