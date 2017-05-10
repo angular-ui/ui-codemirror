@@ -57,10 +57,6 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       }
     });
 
-    // onLoad callback
-    if (angular.isFunction(codemirrorOptions.onLoad)) {
-      codemirrorOptions.onLoad(codemirror);
-    }
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
@@ -87,6 +83,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     scope.$watch(uiCodemirrorAttr, updateOptions, true);
     function updateOptions(newValues, oldValue) {
       if (!angular.isObject(newValues)) { return; }
+
+      // onLoad callback
+      if (angular.isFunction(newValues.onLoad)) {
+        newValues.onLoad(codemirrot);
+      }
       codemirrorDefaultsKeys.forEach(function(key) {
         if (newValues.hasOwnProperty(key)) {
 
