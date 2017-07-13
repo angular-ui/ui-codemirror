@@ -28,6 +28,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
   function postLink(scope, iElement, iAttrs, ngModel) {
 
+
     var codemirrorOptions = angular.extend(
       { value: iElement.text() },
       uiCodemirrorConfig.codemirror || {},
@@ -37,13 +38,9 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
 
-    configOptionsWatcher(
-      codemirror,
-      iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts,
-      scope
-    );
+    configOptionsWatcher(codemirror, iAttrs.uiCodemirror, scope);
 
-    configNgModelLink(codemirror, ngModel, scope);
+    configNgModelLink(codemirror, iAttrs.uiCodemirror, ngModel, scope);
 
     configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
 
@@ -60,6 +57,56 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
+
+
+CodeMirror.defineExtension("autoFormatRange", function (from, to) {
+    var cm = this;
+    var outer = cm.getMode(), text = cm.getRange(from, to).split("\n");
+    var state = CodeMirror.copyState(outer, cm.getTokenAt(from).state);
+    var tabSize = cm.getOption("tabSize");
+
+    var out = "", lines = 0, atSol = from.ch == 0;
+    function newline() {
+        out += "\n";
+        atSol = true;
+        ++lines;
+    }
+
+    for (var i = 0; i < text.length; ++i) {
+        var stream = new CodeMirror.StringStream(text[i], tabSize);
+        while (!stream.eol()) {
+            var inner = CodeMirror.innerMode(outer, state);
+            var style = outer.token(stream, state), cur = stream.current();
+            stream.start = stream.pos;
+            if (!atSol || /\S/.test(cur)) {
+                out += cur;
+                atSol = false;
+            }
+            if (!atSol && inner.mode.newlineAfterToken &&
+                inner.mode.newlineAfterToken(style, cur, stream.string.slice(stream.pos) || text[i+1] || "", inner.state))
+                newline();
+        }
+        if (!stream.pos && outer.blankLine) outer.blankLine(state);
+        if (!atSol) newline();
+    }
+
+    cm.operation(function () {
+        cm.replaceRange(out, from, to);
+        for (var cur = from.line + 1, end = from.line + lines; cur <= end; ++cur)
+            cm.indentLine(cur, "smart");
+    });
+});
+
+// Applies automatic mode-aware indentation to the specified range
+CodeMirror.defineExtension("autoIndentRange", function (from, to) {
+    var cmInstance = this;
+    this.operation(function () {
+        for (var i = from.line; i <= to.line; i++) {
+            cmInstance.indentLine(i, "smart");
+        }
+    });
+});
+
     var codemirrot;
 
     if (iElement[0].tagName === 'TEXTAREA') {
@@ -82,6 +129,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
     scope.$watch(uiCodemirrorAttr, updateOptions, true);
     function updateOptions(newValues, oldValue) {
+
       if (!angular.isObject(newValues)) { return; }
 
       // onLoad callback
@@ -101,7 +149,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     }
   }
 
-  function configNgModelLink(codemirror, ngModel, scope) {
+  function configNgModelLink(codemirror, uiCodemirrorAttr, ngModel, scope) {
     if (!ngModel) { return; }
     // CodeMirror expects a string, so make sure it gets one.
     // This does not change the model.
@@ -122,6 +170,15 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
       var safeViewValue = ngModel.$viewValue || '';
       codemirror.setValue(safeViewValue);
+
+      scope.$watch(uiCodemirrorAttr, function (newValue, oldValue){
+        if (!angular.isObject(newValue)) { return; }
+
+        if(angular.isFunction(newValue.onSet)){
+          newValue.onSet(codemirror);
+          newValue.onSet = null;
+        }
+      });
     };
 
 
@@ -130,6 +187,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       var newValue = instance.getValue();
       if (newValue !== ngModel.$viewValue) {
         scope.$evalAsync(function() {
+
           ngModel.$setViewValue(newValue);
         });
       }
