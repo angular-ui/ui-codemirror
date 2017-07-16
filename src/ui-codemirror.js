@@ -85,6 +85,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       // onLoad callback
       if (angular.isFunction(newValues.onLoad)) {
         newValues.onLoad(codemirrot);
+        newValues.onLoad = null;
       }
       codemirrorDefaultsKeys.forEach(function(key) {
         if (newValues.hasOwnProperty(key)) {
