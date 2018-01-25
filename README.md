@@ -57,7 +57,7 @@ myAppModule.controller('MyController', [ '$scope', function($scope) {
 		lineWrapping : true,
 		lineNumbers: true,
 		readOnly: 'nocursor',
-		mode: 'xml',
+		mode: 'xml'
 	};
 }]);
 ```
