@@ -3,7 +3,7 @@
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
-angular.module('ui.codemirror', [])
+module.exports = angular.module('ui.codemirror', [])
   .constant('uiCodemirrorConfig', {})
   .directive('uiCodemirror', uiCodemirrorDirective);
 
@@ -28,6 +28,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
   function postLink(scope, iElement, iAttrs, ngModel) {
 
+
     var codemirrorOptions = angular.extend(
       { value: iElement.text() },
       uiCodemirrorConfig.codemirror || {},
@@ -37,13 +38,9 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
 
     var codemirror = newCodemirrorEditor(iElement, codemirrorOptions);
 
-    configOptionsWatcher(
-      codemirror,
-      iAttrs.uiCodemirror || iAttrs.uiCodemirrorOpts,
-      scope
-    );
+    configOptionsWatcher(codemirror, iAttrs.uiCodemirror, scope);
 
-    configNgModelLink(codemirror, ngModel, scope);
+    configNgModelLink(codemirror, iAttrs.uiCodemirror, ngModel, scope);
 
     configUiRefreshAttribute(codemirror, iAttrs.uiRefresh, scope);
 
@@ -57,10 +54,6 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       }
     });
 
-    // onLoad callback
-    if (angular.isFunction(codemirrorOptions.onLoad)) {
-      codemirrorOptions.onLoad(codemirror);
-    }
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
@@ -76,6 +69,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       }, codemirrorOptions);
     }
 
+    codemirrot.setSize("100%", "100%");
     return codemirrot;
   }
 
@@ -85,21 +79,27 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
     scope.$watch(uiCodemirrorAttr, updateOptions, true);
     function updateOptions(newValues, oldValue) {
+
       if (!angular.isObject(newValues)) { return; }
+
+      // onLoad callback
+      if (angular.isFunction(newValues.onLoad)) {
+        newValues.onLoad(codemirrot);
+        newValues.onLoad = null;
+      }
       codemirrorDefaultsKeys.forEach(function(key) {
         if (newValues.hasOwnProperty(key)) {
 
           if (oldValue && newValues[key] === oldValue[key]) {
             return;
           }
-
           codemirrot.setOption(key, newValues[key]);
         }
       });
     }
   }
 
-  function configNgModelLink(codemirror, ngModel, scope) {
+  function configNgModelLink(codemirror, uiCodemirrorAttr, ngModel, scope) {
     if (!ngModel) { return; }
     // CodeMirror expects a string, so make sure it gets one.
     // This does not change the model.
@@ -120,6 +120,15 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       //Although the formatter have already done this, it can be possible that another formatter returns undefined (for example the required directive)
       var safeViewValue = ngModel.$viewValue || '';
       codemirror.setValue(safeViewValue);
+
+      scope.$watch(uiCodemirrorAttr, function (newValue, oldValue){
+        if (!angular.isObject(newValue)) { return; }
+
+        if(angular.isFunction(newValue.onSet)){
+          newValue.onSet(codemirror);
+          newValue.onSet = null;
+        }
+      });
     };
 
 
@@ -128,6 +137,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       var newValue = instance.getValue();
       if (newValue !== ngModel.$viewValue) {
         scope.$evalAsync(function() {
+
           ngModel.$setViewValue(newValue);
         });
       }
