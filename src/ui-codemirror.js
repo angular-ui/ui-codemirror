@@ -64,22 +64,22 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
-    var codemirrot;
+    var codemirror;
 
     if (iElement[0].tagName === 'TEXTAREA') {
       // Might bug but still ...
-      codemirrot = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
+      codemirror = window.CodeMirror.fromTextArea(iElement[0], codemirrorOptions);
     } else {
       iElement.html('');
-      codemirrot = new window.CodeMirror(function(cm_el) {
+      codemirror = new window.CodeMirror(function(cm_el) {
         iElement.append(cm_el);
       }, codemirrorOptions);
     }
 
-    return codemirrot;
+    return codemirror;
   }
 
-  function configOptionsWatcher(codemirrot, uiCodemirrorAttr, scope) {
+  function configOptionsWatcher(codemirror, uiCodemirrorAttr, scope) {
     if (!uiCodemirrorAttr) { return; }
 
     var codemirrorDefaultsKeys = Object.keys(window.CodeMirror.defaults);
@@ -93,7 +93,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
             return;
           }
 
-          codemirrot.setOption(key, newValues[key]);
+          codemirror.setOption(key, newValues[key]);
         }
       });
     }
@@ -132,6 +132,14 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         });
       }
     });
+
+    // Emit HTML 'blur' event when editor loses focus
+    codemirror.on('blur', function(instance) {
+      angular
+        .element(instance.getWrapperElement())
+        .parent()
+        .trigger('blur');
+    });
   }
 
   function configUiRefreshAttribute(codeMirror, uiRefreshAttr, scope) {
@@ -148,3 +156,5 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
   }
 
 }
+
+uiCodemirrorDirective.$inject = ['$timeout', 'uiCodemirrorConfig'];
